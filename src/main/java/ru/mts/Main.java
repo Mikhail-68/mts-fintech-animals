@@ -15,6 +15,5 @@ public class Main {
         service.create10Animal();
         service.create10Animal(4);
         new CreateAnimalService() { }.create10Animal();
-
     }
 }

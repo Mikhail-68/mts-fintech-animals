@@ -29,4 +29,19 @@ public abstract class AbstractAnimal implements Animal {
         return character;
     }
 
+    public void setBreed(String breed) {
+        this.breed = breed;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCost(BigDecimal cost) {
+        this.cost = cost;
+    }
+
+    public void setCharacter(String character) {
+        this.character = character;
+    }
 }

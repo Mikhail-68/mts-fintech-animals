@@ -5,8 +5,7 @@ import ru.mts.Dog;
 public class CreateAnimalServiceImpl implements CreateAnimalService {
     public void create10Animal(int count) {
         for(int i = 0; i < count; i++) {
-            Dog dog = new Dog();
-            printCreatedAnimal();
+            printCreatedAnimal(createRandomAnimal());
         }
     }
 
@@ -14,8 +13,7 @@ public class CreateAnimalServiceImpl implements CreateAnimalService {
     public void create10Animal() {
         int i = 10;
         do {
-            Dog dog = new Dog();
-            printCreatedAnimal();
+            printCreatedAnimal(createRandomAnimal());
             i--;
         } while (i > 0);
     }
