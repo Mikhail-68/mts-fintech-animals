@@ -5,15 +5,26 @@ import ru.mts.*;
 import java.util.Random;
 
 public interface CreateAnimalService {
-    default void create10Animal() {
+
+    /**
+     * Создание 10 случайных животных
+     * @return массив из 10 случайных животных
+     */
+    default Animal[] create10Animals() {
+        Animal[] animals = new Animal[10];
         int i = 0;
         while (i < 10) {
-            printCreatedAnimal(createRandomAnimal());
+            animals[i] = createRandomAnimal();
             i++;
         }
+        return animals;
     }
 
-    default AbstractAnimal createRandomAnimal() {
+    /**
+     * Создание случайного животного
+     * @return случайное животное
+     */
+    default Animal createRandomAnimal() {
         int countAnimals = 4;
         AbstractAnimal someAnimal;
         int id = new Random().nextInt(countAnimals);
@@ -33,7 +44,11 @@ public interface CreateAnimalService {
         return someAnimal;
     }
 
-    default void printCreatedAnimal(AbstractAnimal someAnimal) {
+    /**
+     * Вывод в консоль животного
+     * @param someAnimal - животное
+     */
+    default void printCreatedAnimal(Animal someAnimal) {
         System.out.println("Создано животное: " + someAnimal.getName());
     }
 }

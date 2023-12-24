@@ -1,20 +1,25 @@
 package ru.mts.createAnimal;
 
+import ru.mts.Animal;
 import ru.mts.Dog;
 
 public class CreateAnimalServiceImpl implements CreateAnimalService {
-    public void create10Animal(int count) {
+    public Animal[] createAnimals(int count) {
+        Animal[] animals = new Animal[count];
         for(int i = 0; i < count; i++) {
-            printCreatedAnimal(createRandomAnimal());
+            animals[i] = createRandomAnimal();
         }
+        return animals;
     }
 
     @Override
-    public void create10Animal() {
+    public Animal[] create10Animals() {
+        Animal[] animals = new Animal[10];
         int i = 10;
         do {
-            printCreatedAnimal(createRandomAnimal());
             i--;
+            animals[i] = createRandomAnimal();
         } while (i > 0);
+        return animals;
     }
 }

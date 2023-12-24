@@ -2,18 +2,20 @@ package ru.mts;
 
 import ru.mts.createAnimal.CreateAnimalService;
 import ru.mts.createAnimal.CreateAnimalServiceImpl;
+import ru.mts.searchAnimal.SearchAnimalService;
+import ru.mts.searchAnimal.SearchAnimalServiceImpl;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
-        Dog dog = new Dog();
-        dog.cost = BigDecimal.valueOf(1200.12545);
-        System.out.println(dog.getCost());
+        CreateAnimalService createService = new CreateAnimalServiceImpl();
+        Animal[] animals = createService.create10Animals();
 
-        CreateAnimalServiceImpl service = new CreateAnimalServiceImpl();
-        service.create10Animal();
-        service.create10Animal(4);
-        new CreateAnimalService() { }.create10Animal();
+        SearchAnimalService searchService = new SearchAnimalServiceImpl();
+
+        System.out.println(Arrays.toString(searchService.findLeapYearNames(animals)));
+        System.out.println(Arrays.toString(searchService.findOlderAnimal(animals, 5)));
     }
 }
