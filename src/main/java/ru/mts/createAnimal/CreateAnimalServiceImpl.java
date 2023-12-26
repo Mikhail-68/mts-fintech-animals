@@ -1,14 +1,22 @@
 package ru.mts.createAnimal;
 
-import ru.mts.Animal;
-import ru.mts.Dog;
+import ru.mts.*;
+
+import java.time.LocalDate;
 
 public class CreateAnimalServiceImpl implements CreateAnimalService {
-    public Animal[] createAnimals(int count) {
-        Animal[] animals = new Animal[count];
-        for(int i = 0; i < count; i++) {
-            animals[i] = createRandomAnimal();
-        }
+    public Animal[] create10CustomAnimals() {
+        Animal[] animals = new Animal[10];
+        animals[0] = new Cat("breed1", "Cat1", LocalDate.ofYearDay(2000, 135));
+        animals[1] = new Dog("breed2", "Dog1", LocalDate.ofYearDay(2004, 300));
+        animals[2] = new Shark("breed1", "Shark1", LocalDate.ofYearDay(1999, 111));
+        animals[3] = new Shark("breed1", "Shark1", LocalDate.ofYearDay(1999, 111));
+        animals[4] = new Dog("breed1", "Dog1", LocalDate.ofYearDay(2000, 27));
+        animals[5] = new Wolf("breed1", "Wolf1", LocalDate.ofYearDay(2000, 67));
+        animals[6] = new Cat("breed1", "Cat1", LocalDate.ofYearDay(2000, 135));
+        animals[7] = new Wolf("breed1", "Wolf1", LocalDate.ofYearDay(2000, 135));
+        animals[8] = new Wolf("breed1", "Wolf1", LocalDate.ofYearDay(2000, 272));
+        animals[9] = new Cat("breed1", "Cat1", LocalDate.ofYearDay(2016, 19));
         return animals;
     }
 

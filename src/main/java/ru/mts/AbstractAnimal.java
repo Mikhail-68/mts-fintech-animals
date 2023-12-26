@@ -64,14 +64,6 @@ public abstract class AbstractAnimal implements Animal {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AbstractAnimal that = (AbstractAnimal) o;
-        return Objects.equals(breed, that.breed) && Objects.equals(name, that.name) && Objects.equals(birthdate, that.birthdate);
-    }
-
-    @Override
     public String toString() {
         return "AbstractAnimal{" +
                 "breed='" + breed + '\'' +

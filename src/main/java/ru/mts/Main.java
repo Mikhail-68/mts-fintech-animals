@@ -16,6 +16,9 @@ public class Main {
         SearchAnimalService searchService = new SearchAnimalServiceImpl();
 
         System.out.println(Arrays.toString(searchService.findLeapYearNames(animals)));
-        System.out.println(Arrays.toString(searchService.findOlderAnimal(animals, 5)));
+        System.out.println(Arrays.toString(searchService.findOlderAnimal(animals, 10)));
+
+        animals = new CreateAnimalServiceImpl().create10CustomAnimals();
+        searchService.findDuplicate(animals);
     }
 }
