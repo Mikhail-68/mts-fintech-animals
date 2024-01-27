@@ -2,10 +2,10 @@ package ru.mts;
 
 import ru.mts.createAnimal.CreateAnimalService;
 import ru.mts.createAnimal.CreateAnimalServiceImpl;
+import ru.mts.model.Animal;
 import ru.mts.searchAnimal.SearchAnimalService;
 import ru.mts.searchAnimal.SearchAnimalServiceImpl;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 
 public class Main {
@@ -19,6 +19,7 @@ public class Main {
         System.out.println(Arrays.toString(searchService.findOlderAnimal(animals, 10)));
 
         animals = new CreateAnimalServiceImpl().create10CustomAnimals();
-        searchService.findDuplicate(animals);
+        searchService.printDuplicate(animals);
+
     }
 }

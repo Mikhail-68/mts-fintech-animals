@@ -1,6 +1,6 @@
 package ru.mts.searchAnimal;
 
-import ru.mts.Animal;
+import ru.mts.model.Animal;
 
 public interface SearchAnimalService {
     /**
@@ -19,8 +19,15 @@ public interface SearchAnimalService {
     Animal[] findOlderAnimal(Animal[] animals, int N);
 
     /**
-     * Поиск дублирующихся животных и вывод их в консоль
+     * Поиск дублирующихся животных
+     * @param animals - массив животных
+     * @return массив животных
+     */
+    Animal[] findDuplicate(Animal[] animals);
+
+    /**
+     * Вывод дублирующихся животных в консоль
      * @param animals - массив животных
      */
-    void findDuplicate(Animal[] animals);
+    void printDuplicate(Animal[] animals);
 }

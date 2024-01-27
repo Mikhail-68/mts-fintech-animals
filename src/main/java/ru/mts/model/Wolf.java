@@ -1,13 +1,13 @@
-package ru.mts;
+package ru.mts.model;
 
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class Dog extends Pet {
-    public Dog() {
+public class Wolf extends Predator {
+    public Wolf() {
     }
 
-    public Dog(String breed, String name, LocalDate birthdate) {
+    public Wolf(String breed, String name, LocalDate birthdate) {
         this.breed = breed;
         this.name = name;
         this.birthdate = birthdate;
