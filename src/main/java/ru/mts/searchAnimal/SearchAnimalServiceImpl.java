@@ -32,8 +32,8 @@ public class SearchAnimalServiceImpl implements SearchAnimalService {
         int crntInd = 0;
 
         for (int i = 0; i < animals.length; i++) {
-            if (animals[i] == null) continue;
-            if (LocalDate.now().getYear() - animals[i].getBirthdate().getYear() > N) {
+            if (animals[i] == null || animals[i].getBirthdate() == null) continue;
+            if (LocalDate.now().compareTo(animals[i].getBirthdate().plusYears(N)) > 0) {
                 olderAnimals = Arrays.copyOf(olderAnimals, crntInd + 1);
                 olderAnimals[crntInd++] = animals[i];
             }
