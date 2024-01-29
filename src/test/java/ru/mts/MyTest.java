@@ -1,6 +1,7 @@
 package ru.mts;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -21,6 +22,7 @@ class MyTest {
         @Nested
         class CatTest {
             @Test
+            @DisplayName("Проверка двух одинаковых животных")
             public void isEquals() {
                 Animal cat = new Cat("breed", "name", LocalDate.ofYearDay(2000, 1));
                 Animal cat2 = new Cat("breed", "name", LocalDate.ofYearDay(2000, 1));
@@ -28,12 +30,14 @@ class MyTest {
             }
 
             @Test
+            @DisplayName("Проверка животного на null")
             public void isNotEqualsWithNull() {
                 Animal cat = new Cat("breed", "name", LocalDate.ofYearDay(2000, 1));
                 Assertions.assertNotEquals(cat, null);
             }
 
             @Test
+            @DisplayName("Проверка животного с разницей в поле breed")
             public void isNotEqualsDiffBreed() {
                 Animal cat = new Cat("breed", "name", LocalDate.ofYearDay(2000, 1));
                 Animal cat2 = new Cat(null, "name", LocalDate.ofYearDay(2000, 1));
@@ -41,6 +45,7 @@ class MyTest {
             }
 
             @Test
+            @DisplayName("Проверка животного с разницей в поле name")
             public void isNotEqualsDiffName() {
                 Animal cat = new Cat("breed", "name", LocalDate.ofYearDay(2000, 1));
                 Animal cat2 = new Cat("breed", "name2", LocalDate.ofYearDay(2000, 1));
@@ -48,6 +53,7 @@ class MyTest {
             }
 
             @Test
+            @DisplayName("Проверка животного с разницей в поле даты")
             public void isNotEqualsDiffLocalDate() {
                 Animal cat = new Cat("breed", "name", LocalDate.ofYearDay(2000, 1));
                 Animal cat2 = new Cat("breed", "name", LocalDate.ofYearDay(2000, 2));
@@ -58,6 +64,7 @@ class MyTest {
         @Nested
         class DogTest {
             @Test
+            @DisplayName("Проверка двух одинаковых животных")
             public void isEquals() {
                 Animal dog = new Dog("breed", "name", LocalDate.ofYearDay(2000, 1));
                 Animal dog2 = new Dog("breed", "name", LocalDate.ofYearDay(2000, 1));
@@ -65,12 +72,14 @@ class MyTest {
             }
 
             @Test
+            @DisplayName("Проверка животного на null")
             public void isNotEqualsWithNull() {
                 Animal dog = new Dog("breed", "name", LocalDate.ofYearDay(2000, 1));
                 Assertions.assertNotEquals(dog, null);
             }
 
             @Test
+            @DisplayName("Проверка животного с разницей в поле breed")
             public void isNotEqualsDiffBreed() {
                 Animal dog = new Dog("breed", "name", LocalDate.ofYearDay(2000, 1));
                 Animal dog2 = new Dog("breed2", "name", LocalDate.ofYearDay(2000, 1));
@@ -78,6 +87,7 @@ class MyTest {
             }
 
             @Test
+            @DisplayName("Проверка животного с разницей в поле name")
             public void isNotEqualsDiffName() {
                 Animal dog = new Dog("breed", "name", LocalDate.ofYearDay(2000, 1));
                 Animal dog2 = new Dog("breed", "name2", LocalDate.ofYearDay(2000, 1));
@@ -85,6 +95,7 @@ class MyTest {
             }
 
             @Test
+            @DisplayName("Проверка животного с разницей в поле даты")
             public void isNotEqualsDiffLocalDate() {
                 Animal dog = new Dog("breed", "name", LocalDate.ofYearDay(2000, 1));
                 Animal dog2 = new Dog("breed", "name", LocalDate.ofYearDay(2000, 2));
@@ -95,6 +106,7 @@ class MyTest {
         @Nested
         class SharkTest {
             @Test
+            @DisplayName("Проверка двух одинаковых животных")
             public void isEquals() {
                 Animal shark = new Shark("breed", "name", LocalDate.ofYearDay(2000, 1));
                 Animal shark2 = new Shark("breed", "name", LocalDate.ofYearDay(2000, 1));
@@ -102,12 +114,14 @@ class MyTest {
             }
 
             @Test
+            @DisplayName("Проверка животного на null")
             public void isNotEqualsWithNull() {
                 Animal shark = new Shark("breed", "name", LocalDate.ofYearDay(2000, 1));
                 Assertions.assertNotEquals(shark, null);
             }
 
             @Test
+            @DisplayName("Проверка животного с разницей в поле breed")
             public void isNotEqualsDiffBreed() {
                 Animal shark = new Shark("breed", "name", LocalDate.ofYearDay(2000, 1));
                 Animal shark2 = new Shark("breed2", "name", LocalDate.ofYearDay(2000, 1));
@@ -115,6 +129,7 @@ class MyTest {
             }
 
             @Test
+            @DisplayName("Проверка животного с разницей в поле name")
             public void isNotEqualsDiffName() {
                 Animal shark = new Shark("breed", "name", LocalDate.ofYearDay(2000, 1));
                 Animal shark2 = new Shark("breed", "name2", LocalDate.ofYearDay(2000, 1));
@@ -122,6 +137,7 @@ class MyTest {
             }
 
             @Test
+            @DisplayName("Проверка животного с разницей в поле даты")
             public void isNotEqualsDiffLocalDate() {
                 Animal shark = new Shark("breed", "name", LocalDate.ofYearDay(2000, 1));
                 Animal shark2 = new Shark("breed", "name", LocalDate.ofYearDay(2000, 2));
@@ -132,6 +148,7 @@ class MyTest {
         @Nested
         class WolfTest {
             @Test
+            @DisplayName("Проверка двух одинаковых животных")
             public void isEquals() {
                 Animal wolf = new Wolf("breed", "name", LocalDate.ofYearDay(2000, 1));
                 Animal wolf2 = new Wolf("breed", "name", LocalDate.ofYearDay(2000, 1));
@@ -139,12 +156,14 @@ class MyTest {
             }
 
             @Test
+            @DisplayName("Проверка животного на null")
             public void isNotEqualsWithNull() {
                 Animal wolf = new Wolf("breed", "name", LocalDate.ofYearDay(2000, 1));
                 Assertions.assertNotEquals(wolf, null);
             }
 
             @Test
+            @DisplayName("Проверка животного с разницей в поле breed")
             public void isNotEqualsDiffBreed() {
                 Animal wolf = new Wolf("breed", "name", LocalDate.ofYearDay(2000, 1));
                 Animal wolf2 = new Shark("breed2", "name", LocalDate.ofYearDay(2000, 1));
@@ -152,6 +171,7 @@ class MyTest {
             }
 
             @Test
+            @DisplayName("Проверка животного с разницей в поле name")
             public void isNotEqualsDiffName() {
                 Animal wolf = new Wolf("breed", "name", LocalDate.ofYearDay(2000, 1));
                 Animal wolf2 = new Shark("breed", "name2", LocalDate.ofYearDay(2000, 1));
@@ -159,6 +179,7 @@ class MyTest {
             }
 
             @Test
+            @DisplayName("Проверка животного с разницей в поле даты")
             public void isNotEqualsDiffLocalDate() {
                 Animal wolf = new Wolf("breed", "name", LocalDate.ofYearDay(2000, 1));
                 Animal wolf2 = new Shark("breed", "name", LocalDate.ofYearDay(2000, 2));
@@ -167,6 +188,7 @@ class MyTest {
         }
 
         @Test
+        @DisplayName("Проверка Cat и Dog с одинаковыми параметрами")
         public void isNotEqualsCatAndDog() {
             Animal cat = new Cat("breed", "name", LocalDate.ofYearDay(2000, 1));
             Animal dog = new Dog("breed", "name", LocalDate.ofYearDay(2000, 1));
@@ -174,6 +196,7 @@ class MyTest {
         }
 
         @Test
+        @DisplayName("Проверка Shark и Dog с одинаковыми параметрами")
         public void isNotEqualsDogAndShark() {
             Animal shark = new Shark("breed", "name", LocalDate.ofYearDay(2000, 1));
             Animal dog = new Dog("breed", "name", LocalDate.ofYearDay(2000, 1));
@@ -181,6 +204,7 @@ class MyTest {
         }
 
         @Test
+        @DisplayName("Проверка Shark и Wolf с одинаковыми параметрами")
         public void isNotEqualsSharkAndWolf() {
             Animal shark = new Shark("breed", "name", LocalDate.ofYearDay(2000, 1));
             Animal wolf = new Wolf("breed", "name", LocalDate.ofYearDay(2000, 1));
@@ -234,11 +258,13 @@ class MyTest {
         class FindOlderAnimalTest {
 
             @Test
+            @DisplayName("Поиск животных при массиве равном null")
             public void animalsIsNull() {
                 Assertions.assertNull(searchService.findOlderAnimal(null, 0));
             }
 
             @Test
+            @DisplayName("Поиск животных при массиве размера 0")
             public void animalsLength0() {
                 Animal[] animals = new Animal[0];
                 Assertions.assertNull(searchService.findOlderAnimal(animals, 0));
@@ -246,6 +272,7 @@ class MyTest {
 
             @ParameterizedTest
             @MethodSource("ru.mts.FindOlderArgumentsProvider#getArguments")
+            @DisplayName("Параметризованный тест с тестами граничных значений")
             public void findOlder(Animal[] animals, int N, Animal[] expectedResult) {
                 Assertions.assertArrayEquals(expectedResult, searchService.findOlderAnimal(animals, N));
                 System.out.println(Arrays.toString(animals));
@@ -256,17 +283,20 @@ class MyTest {
         class FindDuplicateTest {
 
             @Test
+            @DisplayName("Поиск дубликатов при массиве равном null")
             public void animalsIsNull() {
                 Assertions.assertNull(searchService.findDuplicate(null));
             }
 
             @Test
+            @DisplayName("Поиск дубликатов при массиве размера 0")
             public void animalsLength0() {
                 Animal[] animals = new Animal[0];
                 Assertions.assertNull(searchService.findDuplicate(animals));
             }
 
             @Test
+            @DisplayName("Проверка возвращаемого значения при отсутствии дубликатов")
             public void withoutDuplicateAnimals() {
                 Animal[] animals = {
                         new Shark("", "", LocalDate.ofYearDay(2000, 1)),
@@ -279,6 +309,7 @@ class MyTest {
             }
 
             @Test
+            @DisplayName("Проверка поиска с 2 и более дубликатами")
             public void withDuplicateAnimals() {
                 Animal[] animals = {
                         new Shark("", "", LocalDate.ofYearDay(2000, 1)),
