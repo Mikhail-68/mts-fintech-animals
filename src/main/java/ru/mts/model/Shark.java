@@ -5,6 +5,7 @@ import java.util.Objects;
 
 public class Shark extends Predator {
     public Shark() {
+        breed = "Shark Example";
     }
 
     public Shark(String breed, String name, LocalDate birthdate) {
