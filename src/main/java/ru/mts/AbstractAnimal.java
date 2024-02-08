@@ -2,12 +2,21 @@ package ru.mts;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.util.Objects;
+import java.util.Random;
 
 public abstract class AbstractAnimal implements Animal {
     protected String breed;
     protected String name;
     protected BigDecimal cost;
     protected String character;
+    protected LocalDate birthdate;
+
+    public AbstractAnimal() {
+        Random random = new Random();
+        birthdate = LocalDate.ofYearDay(LocalDate.now().getYear() - random.nextInt(15), random.nextInt(365));
+    }
 
     @Override
     public String getBreed() {
@@ -29,6 +38,11 @@ public abstract class AbstractAnimal implements Animal {
         return character;
     }
 
+    @Override
+    public LocalDate getBirthdate() {
+        return birthdate;
+    }
+
     public void setBreed(String breed) {
         this.breed = breed;
     }
@@ -43,5 +57,18 @@ public abstract class AbstractAnimal implements Animal {
 
     public void setCharacter(String character) {
         this.character = character;
+    }
+
+    public void setBirthdate(LocalDate birthdate) {
+        this.birthdate = birthdate;
+    }
+
+    @Override
+    public String toString() {
+        return "AbstractAnimal{" +
+                "breed='" + breed + '\'' +
+                ", name='" + name + '\'' +
+                ", birthdate=" + birthdate +
+                '}';
     }
 }
