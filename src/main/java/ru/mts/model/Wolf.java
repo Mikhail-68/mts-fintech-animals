@@ -5,6 +5,7 @@ import java.util.Objects;
 
 public class Wolf extends Predator {
     public Wolf() {
+        breed = "Wolf Example";
     }
 
     public Wolf(String breed, String name, LocalDate birthdate) {

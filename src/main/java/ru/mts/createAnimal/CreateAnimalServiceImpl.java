@@ -5,6 +5,9 @@ import ru.mts.model.*;
 import java.time.LocalDate;
 
 public class CreateAnimalServiceImpl implements CreateAnimalService {
+
+    private AnimalType animalType;
+
     public Animal[] create10CustomAnimals() {
         Animal[] animals = new Animal[10];
         animals[0] = new Cat("breed1", "Cat1", LocalDate.ofYearDay(2000, 135));
@@ -30,4 +33,13 @@ public class CreateAnimalServiceImpl implements CreateAnimalService {
         } while (i > 0);
         return animals;
     }
+
+    public void setAnimalType(AnimalType animalType) {
+        this.animalType = animalType;
+    }
+
+    public Animal getAnimal() {
+        return animalType.getAnimal();
+    }
+
 }

@@ -5,6 +5,7 @@ import java.util.Objects;
 
 public class Dog extends Pet {
     public Dog() {
+        breed = "Dog Example";
     }
 
     public Dog(String breed, String name, LocalDate birthdate) {
