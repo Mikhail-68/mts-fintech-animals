@@ -1,9 +1,8 @@
-package ru.mts;
+package ru.mts.model;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.util.Objects;
 import java.util.Random;
 
 public abstract class AbstractAnimal implements Animal {

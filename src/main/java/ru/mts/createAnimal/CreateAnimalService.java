@@ -1,6 +1,6 @@
 package ru.mts.createAnimal;
 
-import ru.mts.*;
+import ru.mts.model.*;
 
 import java.util.Random;
 
