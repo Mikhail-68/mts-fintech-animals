@@ -1,29 +1,29 @@
 package ru.mts.repository;
 
 import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import ru.mts.createAnimal.CreateAnimalServiceImpl;
 import ru.mts.model.Animal;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
-@Repository
+//@Repository
 public class AnimalsRepositoryImpl implements AnimalsRepository {
 
-    @Autowired
-    private CreateAnimalServiceImpl createAnimalService;
+    private final CreateAnimalServiceImpl createAnimalService;
     private Animal[] animals;
+
+    public AnimalsRepositoryImpl(CreateAnimalServiceImpl createAnimalService) {
+        this.createAnimalService = createAnimalService;
+    }
 
     public Animal[] getAnimals() {
         return animals;
     }
 
-    @PostConstruct
+//    @PostConstruct
     public void init() {
         animals = new Animal[10];
         for (int i = 0; i < 10; i++) {
