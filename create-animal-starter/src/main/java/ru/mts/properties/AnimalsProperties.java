@@ -1,18 +1,13 @@
 package ru.mts.properties;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@ConfigurationProperties(prefix = "application")
+//@ConfigurationProperties(prefix = "application")
+@Component
 public class AnimalsProperties {
-    private List<String> names;
-
-    public void setNames(List<String> names) {
-        this.names = names;
-    }
-
-    public List<String> getNames() {
-        return names;
-    }
+    @Value("${name}")
+    public List<String> names;
 }

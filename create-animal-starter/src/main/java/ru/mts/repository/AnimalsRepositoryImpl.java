@@ -4,6 +4,7 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import ru.mts.createAnimal.CreateAnimalServiceImpl;
+import ru.mts.model.AbstractAnimal;
 import ru.mts.model.Animal;
 
 import java.time.LocalDate;
@@ -24,10 +25,11 @@ public class AnimalsRepositoryImpl implements AnimalsRepository {
     }
 
 //    @PostConstruct
-    public void init() {
+    public void init(String name) {
         animals = new Animal[10];
         for (int i = 0; i < 10; i++) {
             animals[i] = createAnimalService.getAnimal();
+            ((AbstractAnimal) animals[i]).setName(name);
         }
     }
 
