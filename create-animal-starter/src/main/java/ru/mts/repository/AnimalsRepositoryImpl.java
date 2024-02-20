@@ -1,22 +1,24 @@
 package ru.mts.repository;
 
-import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import ru.mts.createAnimal.CreateAnimalServiceImpl;
+import ru.mts.createAnimal.CreateAnimalService;
 import ru.mts.model.AbstractAnimal;
 import ru.mts.model.Animal;
+import ru.mts.properties.AnimalsProperties;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.util.*;
 
-//@Repository
+@Repository
 public class AnimalsRepositoryImpl implements AnimalsRepository {
 
-    private final CreateAnimalServiceImpl createAnimalService;
+    private final CreateAnimalService createAnimalService;
     private Animal[] animals;
 
-    public AnimalsRepositoryImpl(CreateAnimalServiceImpl createAnimalService) {
+    @Autowired
+    public AnimalsRepositoryImpl(CreateAnimalService createAnimalService, AnimalsProperties animalsProperties) {
         this.createAnimalService = createAnimalService;
     }
 
@@ -24,12 +26,11 @@ public class AnimalsRepositoryImpl implements AnimalsRepository {
         return animals;
     }
 
-//    @PostConstruct
-    public void init(String name) {
+    @PostConstruct
+    public void init() {
         animals = new Animal[10];
         for (int i = 0; i < 10; i++) {
-            animals[i] = createAnimalService.getAnimal();
-            ((AbstractAnimal) animals[i]).setName(name);
+            animals[i] = createAnimalService.createRandomAnimal();
         }
     }
 
@@ -57,11 +58,11 @@ public class AnimalsRepositoryImpl implements AnimalsRepository {
         Animal[] olderAnimals = new Animal[0];
         int crntInd = 0;
 
-        for (int i = 0; i < animals.length; i++) {
-            if (animals[i] == null || animals[i].getBirthdate() == null) continue;
-            if (LocalDate.now().compareTo(animals[i].getBirthdate().plusYears(age)) > 0) {
+        for (Animal animal : animals) {
+            if (animal == null || animal.getBirthdate() == null) continue;
+            if (LocalDate.now().compareTo(animal.getBirthdate().plusYears(age)) > 0) {
                 olderAnimals = Arrays.copyOf(olderAnimals, crntInd + 1);
-                olderAnimals[crntInd++] = animals[i];
+                olderAnimals[crntInd++] = animal;
             }
         }
         return olderAnimals.length > 0 ? olderAnimals : null;
@@ -72,7 +73,7 @@ public class AnimalsRepositoryImpl implements AnimalsRepository {
         Set<Animal> animalSet = new HashSet<>();
         Set<Animal> crntSet = new HashSet<>();
         for (Animal animal : animals) {
-            if(crntSet.contains(animal)) {
+            if (crntSet.contains(animal)) {
                 animalSet.add(animal);
             } else {
                 crntSet.add(animal);

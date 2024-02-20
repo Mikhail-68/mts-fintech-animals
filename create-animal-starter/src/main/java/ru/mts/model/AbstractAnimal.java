@@ -6,15 +6,12 @@ import org.springframework.stereotype.Component;
 import ru.mts.properties.AnimalsProperties;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
 
 public abstract class AbstractAnimal implements Animal {
-//    @Value("${name}")
-//    private String namePro;
-//    @Autowired
-//    private AnimalsProperties animalsProperties;
     protected String breed;
     protected String name;
     protected BigDecimal cost;
@@ -23,11 +20,8 @@ public abstract class AbstractAnimal implements Animal {
 
     public AbstractAnimal() {
         Random random = new Random();
-        birthdate = LocalDate.ofYearDay(LocalDate.now().getYear() - random.nextInt(15), random.nextInt(365));
-//        List<String> names = animalsProperties.getNames();
-//        name = namePro;
-//        System.out.println("namePro: " + namePro);
-//        System.out.println("animals Prop: " + animalsProperties.name);
+        birthdate = LocalDate.ofYearDay(
+                LocalDate.now().getYear() - random.nextInt(15), random.nextInt(365));
     }
 
     @Override
@@ -42,7 +36,7 @@ public abstract class AbstractAnimal implements Animal {
 
     @Override
     public BigDecimal getCost() {
-        return cost.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+        return cost.setScale(2, RoundingMode.HALF_EVEN);
     }
 
     @Override

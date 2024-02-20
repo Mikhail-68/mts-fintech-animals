@@ -1,7 +1,10 @@
 package ru.mts.createAnimal;
 
+import org.springframework.lang.NonNull;
 import ru.mts.model.*;
+import ru.mts.properties.AnimalsProperties;
 
+import java.util.List;
 import java.util.Random;
 
 public interface CreateAnimalService {
@@ -28,19 +31,15 @@ public interface CreateAnimalService {
         int countAnimals = 4;
         AbstractAnimal someAnimal;
         int id = new Random().nextInt(countAnimals);
-        switch (id) {
-            case 0: someAnimal = new Wolf();
-                someAnimal.setName("wolf");
-                break;
-            case 1: someAnimal = new Shark();
-                someAnimal.setName("shark");
-                break;
-            case 2: someAnimal = new Dog();
-                someAnimal.setName("dog");
-                break;
-            default: someAnimal = new Cat();
-                someAnimal.setName("cat");
-        }
+        someAnimal = switch (id) {
+            case 0 -> new Wolf();
+            case 1 -> new Shark();
+            case 2 -> new Dog();
+            default -> new Cat();
+        };
+        Random random = new Random();
+        List<String> namesList = getAnimalsProperties().getNames();
+        someAnimal.setName(namesList.get(random.nextInt(namesList.size())));
         return someAnimal;
     }
 
@@ -51,4 +50,6 @@ public interface CreateAnimalService {
     default void printCreatedAnimal(Animal someAnimal) {
         System.out.println("Создано животное: " + someAnimal.getName());
     }
+
+    AnimalsProperties getAnimalsProperties();
 }

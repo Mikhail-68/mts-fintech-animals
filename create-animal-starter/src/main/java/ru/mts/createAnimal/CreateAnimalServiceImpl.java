@@ -1,12 +1,22 @@
 package ru.mts.createAnimal;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.mts.model.*;
+import ru.mts.properties.AnimalsProperties;
 
 import java.time.LocalDate;
 
+@Service
 public class CreateAnimalServiceImpl implements CreateAnimalService {
 
     private AnimalType animalType;
+    private final AnimalsProperties animalsProperties;
+
+    @Autowired
+    public CreateAnimalServiceImpl(AnimalsProperties animalsProperties) {
+        this.animalsProperties = animalsProperties;
+    }
 
     public Animal[] create10CustomAnimals() {
         Animal[] animals = new Animal[10];
@@ -32,6 +42,11 @@ public class CreateAnimalServiceImpl implements CreateAnimalService {
             animals[i] = createRandomAnimal();
         } while (i > 0);
         return animals;
+    }
+
+    @Override
+    public AnimalsProperties getAnimalsProperties() {
+        return animalsProperties;
     }
 
     public void setAnimalType(AnimalType animalType) {

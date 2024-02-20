@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.mts.repository.AnimalsRepositoryImpl;
 
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class ScheduledTask {
@@ -15,7 +16,7 @@ public class ScheduledTask {
         this.animalsRepository = animalsRepository;
     }
 
-    @Scheduled(fixedDelay = 60000)
+    @Scheduled(fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
     public void print() {
         System.out.println("repo " + Arrays.toString(animalsRepository.getAnimals()));
         System.out.println(Arrays.toString(animalsRepository.findOlderAnimal(14)));
