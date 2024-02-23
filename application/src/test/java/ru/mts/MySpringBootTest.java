@@ -5,11 +5,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import ru.mts.createAnimal.CreateAnimalServiceImpl;
 import ru.mts.model.Animal;
 import ru.mts.properties.AnimalsProperties;
 
 @SpringBootTest(classes = Application.class)
+@ActiveProfiles("test")
 public class MySpringBootTest {
     @Autowired
     private CreateAnimalServiceImpl createAnimalService;
