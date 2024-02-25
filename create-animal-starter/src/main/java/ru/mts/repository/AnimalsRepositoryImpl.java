@@ -3,93 +3,91 @@ package ru.mts.repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.mts.createAnimal.CreateAnimalService;
-import ru.mts.model.AbstractAnimal;
 import ru.mts.model.Animal;
-import ru.mts.properties.AnimalsProperties;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.*;
 
 @Repository
 public class AnimalsRepositoryImpl implements AnimalsRepository {
 
     private final CreateAnimalService createAnimalService;
-    private Animal[] animals;
+    private List<Animal> animals;
 
     @Autowired
-    public AnimalsRepositoryImpl(CreateAnimalService createAnimalService, AnimalsProperties animalsProperties) {
+    public AnimalsRepositoryImpl(CreateAnimalService createAnimalService) {
         this.createAnimalService = createAnimalService;
     }
 
-    public Animal[] getAnimals() {
-        return animals;
+    public List<Animal> getAnimals() {
+        return new ArrayList<>(animals);
     }
 
     @PostConstruct
     public void init() {
-        animals = new Animal[10];
+        animals = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            animals[i] = createAnimalService.createRandomAnimal();
+            animals.add(createAnimalService.createRandomAnimal());
         }
     }
 
     @Override
-    public String[] findLeapYearNames() {
-        if (animals == null) return null;
+    public Map<String, LocalDate> findLeapYearNames() {
+        if (animals == null || animals.isEmpty()) return Collections.emptyMap();
 
-        String[] names = new String[0];
-        int crntInd = 0;
+        Map<String, LocalDate> resAnimals = new HashMap<>();
 
         for (Animal animal : animals) {
             if (animal == null) continue;
             if (animal.getBirthdate().isLeapYear()) {
-                names = Arrays.copyOf(names, crntInd + 1);
-                names[crntInd++] = animal.getName();
+                String typeAndName = animal.getClass().getSimpleName() + " " + animal.getName();
+                resAnimals.put(typeAndName, animal.getBirthdate());
             }
         }
-        return names.length > 0 ? names : null;
+        return resAnimals;
     }
 
     @Override
-    public Animal[] findOlderAnimal(int age) {
-        if (animals == null) return null;
+    public Map<Animal, Integer> findOlderAnimal(int age) {
+        if (animals == null) return Collections.emptyMap();
 
-        Animal[] olderAnimals = new Animal[0];
-        int crntInd = 0;
+        Map<Animal, Integer> olderAnimals = new HashMap<>();
+        Animal seniorAnimal = null;
 
         for (Animal animal : animals) {
             if (animal == null || animal.getBirthdate() == null) continue;
+
+            if(seniorAnimal == null || animal.getBirthdate().isBefore(seniorAnimal.getBirthdate())) {
+                seniorAnimal = animal;
+            }
+
             if (LocalDate.now().compareTo(animal.getBirthdate().plusYears(age)) > 0) {
-                olderAnimals = Arrays.copyOf(olderAnimals, crntInd + 1);
-                olderAnimals[crntInd++] = animal;
+                olderAnimals.put(animal, Period.between(animal.getBirthdate(), LocalDate.now()).getYears());
             }
         }
-        return olderAnimals.length > 0 ? olderAnimals : null;
+        if(olderAnimals.isEmpty() && seniorAnimal != null) olderAnimals.put(seniorAnimal, Period.between(seniorAnimal.getBirthdate(), LocalDate.now()).getYears());
+        return olderAnimals;
     }
 
     @Override
-    public Set<Animal> findDuplicate() {
-        Set<Animal> animalSet = new HashSet<>();
-        Set<Animal> crntSet = new HashSet<>();
+    public Map<String, Integer> findDuplicate() {
+        if (animals == null) return Collections.emptyMap();
+
+        Map<String, Integer> resMap = new HashMap<>();
         for (Animal animal : animals) {
-            if (crntSet.contains(animal)) {
-                animalSet.add(animal);
-            } else {
-                crntSet.add(animal);
-            }
+            if(animal == null) continue;
+            String typeName = animal.getClass().getSimpleName();
+            resMap.put(typeName, resMap.getOrDefault(typeName, 0) + 1);
         }
-        return animalSet.isEmpty() ? Collections.emptySet() : animalSet;
+        return resMap;
     }
 
     @Override
     public void printDuplicate() {
-        Set<Animal> duplicateAnimals = findDuplicate();
-
+        Map<String, Integer> duplicateAnimals = findDuplicate();
         if (duplicateAnimals.isEmpty()) return;
-
-        for (Animal animal : duplicateAnimals) {
-            System.out.println("Duplicate: name=" + animal.getName() + " birthdate=" + animal.getBirthdate());
-        }
+        System.out.println(duplicateAnimals);
     }
 }

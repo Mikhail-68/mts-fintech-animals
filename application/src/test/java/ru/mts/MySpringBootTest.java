@@ -10,6 +10,8 @@ import ru.mts.createAnimal.CreateAnimalServiceImpl;
 import ru.mts.model.Animal;
 import ru.mts.properties.AnimalsProperties;
 
+import java.util.List;
+
 @SpringBootTest(classes = Application.class)
 @ActiveProfiles("test")
 public class MySpringBootTest {
@@ -29,14 +31,14 @@ public class MySpringBootTest {
     @Test
     @DisplayName("Проверка длины возвращаемого массива")
     public void checkCountCreate10AnimalsTest() {
-        Animal[] animals = createAnimalService.create10Animals();
-        Assertions.assertEquals(10, animals.length);
+        List<Animal> animals = createAnimalService.create10Animals();
+        Assertions.assertEquals(10, animals.size());
     }
 
     @Test
     @DisplayName("Проверка того, что при создании рандомных животных их имена берутся из properties")
     public void checkNamesCreate10AnimalsTest() {
-        Animal[] animals = createAnimalService.create10Animals();
+        List<Animal> animals = createAnimalService.create10Animals();
         for (Animal animal : animals) {
             Assertions.assertTrue(animalsProperties.getNames().contains(animal.getName()));
         }

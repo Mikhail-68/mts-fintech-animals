@@ -4,6 +4,7 @@ import org.springframework.lang.NonNull;
 import ru.mts.model.*;
 import ru.mts.properties.AnimalsProperties;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -13,11 +14,11 @@ public interface CreateAnimalService {
      * Создание 10 случайных животных
      * @return массив из 10 случайных животных
      */
-    default Animal[] create10Animals() {
-        Animal[] animals = new Animal[10];
+    default List<Animal> create10Animals() {
+        List<Animal> animals = new ArrayList<>();
         int i = 0;
         while (i < 10) {
-            animals[i] = createRandomAnimal();
+            animals.add(createRandomAnimal());
             i++;
         }
         return animals;

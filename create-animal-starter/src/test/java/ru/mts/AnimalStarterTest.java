@@ -1,9 +1,8 @@
 package ru.mts;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -13,11 +12,14 @@ import ru.mts.createAnimal.CreateAnimalService;
 import ru.mts.createAnimal.CreateAnimalServiceImpl;
 import ru.mts.model.Animal;
 import ru.mts.model.Cat;
+import ru.mts.model.Dog;
 import ru.mts.properties.AnimalsProperties;
 import ru.mts.repository.AnimalsRepositoryImpl;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static org.mockito.Mockito.mock;
@@ -34,14 +36,14 @@ public class AnimalStarterTest {
 
     @BeforeEach
     public void beforeEach() {
-        animalsRepository = new AnimalsRepositoryImpl(createAnimalService, animalsProperties);
+        animalsRepository = new AnimalsRepositoryImpl(createAnimalService);
     }
 
     @Test
     @DisplayName("Проверка, что init метод инициализирует массив животных")
     public void getAnimalsReturnNotNullAfterInitMethod() {
         animalsRepository.init();
-        Assertions.assertNotNull(animalsRepository.getAnimals());
+        Assertions.assertFalse(animalsRepository.getAnimals().isEmpty());
     }
 
     @Test
@@ -52,24 +54,79 @@ public class AnimalStarterTest {
         Assertions.assertDoesNotThrow(() -> animalsRepository.init());
     }
 
-    @Test
-    @DisplayName("Проверка findDuplicate при множестве одинаковых животных")
-    public void findDuplicateAmongTheSame() {
-        when(createAnimalService.createRandomAnimal()).thenReturn(new Cat("breed", "Barsik", LocalDate.ofYearDay(1, 1)));
+    @Nested
+    class FindLeapYearTest {
+        @Test
+        @DisplayName("Проверяем возврат пустой map при неинициализированном animals")
+        public void animalsIsNull() {
+            Assertions.assertTrue(animalsRepository.findLeapYearNames().isEmpty());
+        }
+        @Test
+        @DisplayName("Проверка возврата пустой map при не нахождении животных родившихся в високосный год")
+        public void animalsNotContainsIsLeapYearTest() {
+            Animal dog = new Dog("", "name", LocalDate.ofYearDay(2021, 1));
+            when(createAnimalService.createRandomAnimal()).thenReturn(dog);
 
-        animalsRepository.init();
-        Set<Animal> expectedSet = animalsRepository.findDuplicate();
+            animalsRepository.init();
+            Map<String, LocalDate> crntMap = animalsRepository.findLeapYearNames();
 
-        Assertions.assertEquals(1, expectedSet.size());
-        Assertions.assertTrue(expectedSet.contains(new Cat("breed", "Barsik", LocalDate.ofYearDay(1, 1))));
+            Assertions.assertTrue(crntMap.isEmpty());
+        }
+        @Test
+        @DisplayName("Проверка найденных животных в високосный год")
+        public void animalIsLeapYearsTest() {
+            Animal dog = new Dog("", "name", LocalDate.ofYearDay(2020, 1));
+            when(createAnimalService.createRandomAnimal()).thenReturn(dog);
+            animalsRepository.init();
+
+            Map<String, LocalDate> crntMap = animalsRepository.findLeapYearNames();
+            Set<Map.Entry<String, LocalDate>> entrySet = crntMap.entrySet();
+
+            Assertions.assertEquals(1, crntMap.size());
+            Assertions.assertTrue(entrySet.contains(Map.entry("Dog name", dog.getBirthdate())));
+        }
     }
 
-    @Test
-    @DisplayName("Проверка метода findOlderName, что при отсутствии подходящих животных он возвращает Null")
-    public void findOlderAnimalTest() {
-        when(createAnimalService.createRandomAnimal()).thenReturn(new Cat("", "", LocalDate.ofYearDay(1, 1)));
-        Animal[] expectedAnimals = animalsRepository.findOlderAnimal(0);
-        Assertions.assertNull(expectedAnimals);
+    @Nested
+    class FindOlderAnimalTest{
+        @Test
+        @DisplayName("Проверка метода findOlderName, что при пустом массиве animals он возвращает emptyMap")
+        public void animalTest() {
+            when(createAnimalService.createRandomAnimal()).thenReturn(new Cat("", "", LocalDate.ofYearDay(2020, 1)));
+            Map<Animal, Integer> crntAnimals = animalsRepository.findOlderAnimal(0);
+            Assertions.assertTrue(crntAnimals.isEmpty());
+        }
+        @ParameterizedTest(name = "age: {arguments}")
+        @DisplayName("Проверка возврата самого старшего животного при отсутствующих подходящих вариантов и возврат подходящих вариантов")
+        @ValueSource(ints = {1, 1000})
+        public void returnAnimalsTest(int age) {
+            Animal animal = new Cat("", "", LocalDate.ofYearDay(2020, 1));
+            when(createAnimalService.createRandomAnimal()).thenReturn(animal);
+            animalsRepository.init();
+            Map<Animal, Integer> crntAnimals = animalsRepository.findOlderAnimal(age);
+            Assertions.assertEquals(Period.between(animal.getBirthdate(), LocalDate.now()).getYears(), crntAnimals.get(animal));
+        }
+    }
+
+    @Nested
+    class findDuplicateTest {
+        @Test
+        @DisplayName("Проверка возврата emptyMap при пустом массиве animals")
+        public void animalsIsNullTest() {
+            Map<String, Integer> duplicate = animalsRepository.findDuplicate();
+            Assertions.assertTrue(duplicate.isEmpty());
+        }
+        @Test
+        @DisplayName("Проверка findDuplicate при множестве одинаковых животных")
+        public void findDuplicateAmongTheSame() {
+            when(createAnimalService.createRandomAnimal()).thenReturn(new Cat("breed", "Barsik", LocalDate.ofYearDay(1, 1)));
+
+            animalsRepository.init();
+            Map<String, Integer> expectedMap = animalsRepository.findDuplicate();
+
+            Assertions.assertEquals(1, expectedMap.size());
+            Assertions.assertEquals(10, expectedMap.get("Cat"));
+        }
     }
 
     @TestConfiguration
