@@ -7,7 +7,9 @@ import ru.mts.properties.AnimalsProperties;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CreateAnimalServiceImpl implements CreateAnimalService {
@@ -36,14 +38,17 @@ public class CreateAnimalServiceImpl implements CreateAnimalService {
     }
 
     @Override
-    public List<Animal> create10Animals() {
-        List<Animal> animals = new ArrayList<>();
+    public Map<String, List<Animal>> create10Animals() {
+        Map<String, List<Animal>> animalsMap = new HashMap<>();
         int i = 10;
         do {
             i--;
-            animals.add(createRandomAnimal());
+            Animal animal = createRandomAnimal();
+            List<Animal> animalList = animalsMap.getOrDefault(animal.getClass().getSimpleName(), new ArrayList<>());
+            animalList.add(animal);
+            animalsMap.put(animal.getClass().getSimpleName(), animalList);
         } while (i > 0);
-        return animals;
+        return animalsMap;
     }
 
     @Override
