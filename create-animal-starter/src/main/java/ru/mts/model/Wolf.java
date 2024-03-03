@@ -1,5 +1,6 @@
 package ru.mts.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -12,6 +13,12 @@ public class Wolf extends Predator {
         this.breed = breed;
         this.name = name;
         this.birthdate = birthdate;
+    }
+
+    public Wolf(String name, LocalDate birthdate, BigDecimal cost) {
+        this.name = name;
+        this.birthdate = birthdate;
+        this.cost = cost;
     }
 
     @Override
