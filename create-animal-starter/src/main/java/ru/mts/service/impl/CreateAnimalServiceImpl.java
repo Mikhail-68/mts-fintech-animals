@@ -1,20 +1,21 @@
-package ru.mts.createAnimal;
+package ru.mts.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.mts.exception.NegativeNumberException;
 import ru.mts.model.*;
 import ru.mts.properties.AnimalsProperties;
+import ru.mts.service.AnimalType;
+import ru.mts.service.CreateAnimalService;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class CreateAnimalServiceImpl implements CreateAnimalService {
 
     private AnimalType animalType;
+
     private final AnimalsProperties animalsProperties;
 
     @Autowired
@@ -38,9 +39,11 @@ public class CreateAnimalServiceImpl implements CreateAnimalService {
     }
 
     @Override
-    public Map<String, List<Animal>> create10Animals() {
+    public Map<String, List<Animal>> createMapRandomAnimals(int n) {
+        if (n < 0) throw new NegativeNumberException(n);
+        if(n == 0) return Collections.emptyMap();
         Map<String, List<Animal>> animalsMap = new HashMap<>();
-        int i = 10;
+        int i = n;
         do {
             i--;
             Animal animal = createRandomAnimal();

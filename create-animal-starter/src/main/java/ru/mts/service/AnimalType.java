@@ -1,4 +1,4 @@
-package ru.mts.createAnimal;
+package ru.mts.service;
 
 import ru.mts.model.*;
 

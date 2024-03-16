@@ -3,8 +3,8 @@ package ru.mts.bpp;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Configuration;
-import ru.mts.createAnimal.AnimalType;
-import ru.mts.createAnimal.CreateAnimalServiceImpl;
+import ru.mts.service.AnimalType;
+import ru.mts.service.impl.CreateAnimalServiceImpl;
 
 import java.util.Random;
 
