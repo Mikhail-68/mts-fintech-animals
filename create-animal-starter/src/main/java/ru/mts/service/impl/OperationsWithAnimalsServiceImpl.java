@@ -1,45 +1,21 @@
-package ru.mts.repository;
+package ru.mts.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import ru.mts.createAnimal.CreateAnimalService;
+import ru.mts.exception.IllegalArraySizeException;
+import ru.mts.exception.NegativeNumberException;
 import ru.mts.model.Animal;
+import ru.mts.service.OperationsWithAnimalsService;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
-public class AnimalsRepositoryImpl implements AnimalsRepository {
-
-    private final CreateAnimalService createAnimalService;
-    private List<Animal> animals;
-
-    @Autowired
-    public AnimalsRepositoryImpl(CreateAnimalService createAnimalService) {
-        this.createAnimalService = createAnimalService;
-    }
-
-    public List<Animal> getAnimals() {
-        return new ArrayList<>(animals);
-    }
-
-    public void setAnimals(List<Animal> animals) {
-        this.animals = animals;
-    }
-
-    @PostConstruct
-    public void init() {
-        animals = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            animals.add(createAnimalService.createRandomAnimal());
-        }
-    }
+public class OperationsWithAnimalsServiceImpl implements OperationsWithAnimalsService {
 
     @Override
-    public Map<String, LocalDate> findLeapYearNames() {
+    public Map<String, LocalDate> findLeapYearNames(List<Animal> animals) {
         if (animals == null) return Collections.emptyMap();
         return animals.stream()
                 .filter(animal -> Objects.nonNull(animal) && animal.getBirthdate().isLeapYear())
@@ -51,8 +27,9 @@ public class AnimalsRepositoryImpl implements AnimalsRepository {
     }
 
     @Override
-    public Map<Animal, Integer> findOlderAnimal(int age) {
+    public Map<Animal, Integer> findOlderAnimal(List<Animal> animals, int age) {
         if (animals == null) return Collections.emptyMap();
+        if (age < 0) throw new NegativeNumberException(age);
 
         Map<Animal, Integer> resMap = animals.stream()
                 .filter(animal -> Objects.nonNull(animal) && LocalDate.now().compareTo(animal.getBirthdate().plusYears(age)) > 0)
@@ -75,7 +52,7 @@ public class AnimalsRepositoryImpl implements AnimalsRepository {
     }
 
     @Override
-    public Map<String, List<Animal>> findDuplicate() {
+    public Map<String, List<Animal>> findDuplicate(List<Animal> animals) {
         if (animals == null) return Collections.emptyMap();
 
         return animals.stream()
@@ -84,7 +61,7 @@ public class AnimalsRepositoryImpl implements AnimalsRepository {
     }
 
     @Override
-    public double findAverageAge() {
+    public double findAverageAge(List<Animal> animals) {
         if (animals == null) return 0;
         return animals.stream()
                 .filter(Objects::nonNull)
@@ -93,8 +70,8 @@ public class AnimalsRepositoryImpl implements AnimalsRepository {
     }
 
     @Override
-    public List<Animal> findOldAndExpensive() {
-        if(animals == null) return Collections.emptyList();
+    public List<Animal> findOldAndExpensive(List<Animal> animals) {
+        if (animals == null) return Collections.emptyList();
         double averageCost = animals.stream()
                 .filter(Objects::nonNull)
                 .mapToDouble(animal -> animal.getCost().doubleValue())
@@ -108,8 +85,9 @@ public class AnimalsRepositoryImpl implements AnimalsRepository {
     }
 
     @Override
-    public List<String> findMinConstAnimals() {
-        if (animals == null) return Collections.emptyList();
+    public List<String> findMinConstAnimals(List<Animal> animals) throws IllegalArraySizeException {
+        Objects.requireNonNull(animals);
+        if (animals.size() < 3) throw new IllegalArraySizeException("Размер массива должен быть равен или больше 3");
         return animals.stream()
                 .filter(Objects::nonNull)
                 .sorted(Comparator.comparing(Animal::getCost))

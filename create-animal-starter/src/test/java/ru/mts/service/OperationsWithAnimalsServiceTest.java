@@ -1,20 +1,19 @@
-package ru.mts;
+package ru.mts.service;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
-import ru.mts.createAnimal.CreateAnimalService;
-import ru.mts.createAnimal.CreateAnimalServiceImpl;
+import ru.mts.exception.IllegalArraySizeException;
+import ru.mts.exception.NegativeNumberException;
 import ru.mts.model.Animal;
 import ru.mts.model.Cat;
 import ru.mts.model.Dog;
-import ru.mts.properties.AnimalsProperties;
-import ru.mts.repository.AnimalsRepositoryImpl;
+import ru.mts.service.CreateAnimalService;
+import ru.mts.service.OperationsWithAnimalsService;
+import ru.mts.service.impl.OperationsWithAnimalsServiceImpl;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -24,36 +23,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 @SpringBootTest
-public class AnimalStarterTest {
+public class OperationsWithAnimalsServiceTest {
     @Autowired
     private CreateAnimalService createAnimalService;
-    @MockBean
-    private AnimalsProperties animalsProperties;
 
-    private AnimalsRepositoryImpl animalsRepository;
+    private OperationsWithAnimalsService operationsWithAnimalsService;
 
     @BeforeEach
     public void beforeEach() {
-        animalsRepository = new AnimalsRepositoryImpl(createAnimalService);
-    }
-
-    @Test
-    @DisplayName("Проверка, что init метод инициализирует массив животных")
-    public void getAnimalsReturnNotNullAfterInitMethod() {
-        animalsRepository.init();
-        Assertions.assertFalse(animalsRepository.getAnimals().isEmpty());
-    }
-
-    @Test
-    @DisplayName("Проверка, что при возвращении null init метод работает корректно")
-    public void doesNotThrowExceptionWhenCreateAnimalReturnNull() {
-        when(animalsProperties.getNames()).thenReturn(List.of("Barsik"));
-        when(createAnimalService.createRandomAnimal()).thenReturn(null);
-        Assertions.assertDoesNotThrow(() -> animalsRepository.init());
+        operationsWithAnimalsService = new OperationsWithAnimalsServiceImpl();
     }
 
     @Nested
@@ -61,60 +40,63 @@ public class AnimalStarterTest {
         @Test
         @DisplayName("Проверяем возврат пустой map при неинициализированном animals")
         public void animalsIsNull() {
-            Assertions.assertTrue(animalsRepository.findLeapYearNames().isEmpty());
+            Assertions.assertTrue(operationsWithAnimalsService.findLeapYearNames(null).isEmpty());
         }
 
         @Test
         @DisplayName("Проверка, что нет NPE при животных = null")
         public void eachAnimalIsNullTest() {
-            when(createAnimalService.createRandomAnimal()).thenReturn(null);
-            animalsRepository.init();
-            Assertions.assertTrue(animalsRepository.findLeapYearNames().isEmpty());
+            List<Animal> animals = new ArrayList<>();
+            animals.add(null);
+            Assertions.assertTrue(operationsWithAnimalsService.findLeapYearNames(animals).isEmpty());
         }
 
         @Test
         @DisplayName("Проверка возврата пустой map при не нахождении животных родившихся в високосный год")
         public void animalsNotContainsIsLeapYearTest() {
-            Animal dog = new Dog("", "name", LocalDate.ofYearDay(2021, 1));
-            when(createAnimalService.createRandomAnimal()).thenReturn(dog);
-
-            animalsRepository.init();
-            Map<String, LocalDate> crntMap = animalsRepository.findLeapYearNames();
-
+            List<Animal> animals = List.of(new Dog("", "name", LocalDate.ofYearDay(2021, 1)));
+            Map<String, LocalDate> crntMap = operationsWithAnimalsService.findLeapYearNames(animals);
             Assertions.assertTrue(crntMap.isEmpty());
         }
 
         @Test
         @DisplayName("Проверка найденных животных в високосный год")
         public void animalIsLeapYearsTest() {
-            Animal dog = new Dog("", "name", LocalDate.ofYearDay(2020, 1));
-            when(createAnimalService.createRandomAnimal()).thenReturn(dog);
-            animalsRepository.init();
+            Animal animal = new Dog("", "name", LocalDate.ofYearDay(2020, 1));
+            List<Animal> animals = List.of(animal);
 
-            Map<String, LocalDate> crntMap = animalsRepository.findLeapYearNames();
+            Map<String, LocalDate> crntMap = operationsWithAnimalsService.findLeapYearNames(animals);
             Set<Map.Entry<String, LocalDate>> entrySet = crntMap.entrySet();
 
             Assertions.assertEquals(1, crntMap.size());
-            Assertions.assertTrue(entrySet.contains(Map.entry("Dog name", dog.getBirthdate())));
+            Assertions.assertTrue(entrySet.contains(Map.entry("Dog name", animal.getBirthdate())));
         }
     }
 
     @Nested
-    class FindOlderAnimalTest{
+    class FindOlderAnimalTest {
         @Test
         @DisplayName("Проверка метода findOlderName, что при пустом массиве animals он возвращает emptyMap")
         public void animalTest() {
-            when(createAnimalService.createRandomAnimal()).thenReturn(new Cat("", "", LocalDate.ofYearDay(2020, 1)));
-            Map<Animal, Integer> crntAnimals = animalsRepository.findOlderAnimal(0);
+            List<Animal> animals = new ArrayList<>();
+            Map<Animal, Integer> crntAnimals = operationsWithAnimalsService.findOlderAnimal(animals, 0);
             Assertions.assertTrue(crntAnimals.isEmpty());
+        }
+
+        @Test
+        @DisplayName("Проверка выброса исключения при отрицательном параметре age")
+        public void checkThrowNegativeNumberException() {
+            List<Animal> animals = new ArrayList<>();
+            Assertions.assertThrows(NegativeNumberException.class,
+                    () -> operationsWithAnimalsService.findOlderAnimal(animals, -1));
         }
 
         @Test
         @DisplayName("Проверка что нет NPE при присутствующих животных = null")
         public void eachAnimalIsNullTest() {
-            when(createAnimalService.createRandomAnimal()).thenReturn(null);
-            animalsRepository.init();
-            Assertions.assertTrue(animalsRepository.findOlderAnimal(0).isEmpty());
+            List<Animal> animals = new ArrayList<>();
+            animals.add(null);
+            Assertions.assertTrue(operationsWithAnimalsService.findOlderAnimal(animals, 0).isEmpty());
         }
 
         @ParameterizedTest(name = "age: {arguments}")
@@ -122,9 +104,8 @@ public class AnimalStarterTest {
         @ValueSource(ints = {1, 1000})
         public void returnAnimalsTest(int age) {
             Animal animal = new Cat("", "", LocalDate.ofYearDay(2020, 1));
-            when(createAnimalService.createRandomAnimal()).thenReturn(animal);
-            animalsRepository.init();
-            Map<Animal, Integer> crntAnimals = animalsRepository.findOlderAnimal(age);
+            List<Animal> animals = List.of(animal);
+            Map<Animal, Integer> crntAnimals = operationsWithAnimalsService.findOlderAnimal(animals, age);
             Assertions.assertEquals(Period.between(animal.getBirthdate(), LocalDate.now()).getYears(), crntAnimals.get(animal));
         }
     }
@@ -134,31 +115,29 @@ public class AnimalStarterTest {
         @Test
         @DisplayName("Проверка возврата emptyMap при пустом массиве animals")
         public void animalsIsNullTest() {
-            Map<String, List<Animal>> duplicate = animalsRepository.findDuplicate();
+            Map<String, List<Animal>> duplicate = operationsWithAnimalsService.findDuplicate(new ArrayList<>());
             Assertions.assertTrue(duplicate.isEmpty());
         }
 
         @Test
         @DisplayName("Проверка отсутствия NPE при содержании null элемента")
         public void findDuplicateWhereEachAnimalIsNull() {
-            when(createAnimalService.createRandomAnimal()).thenReturn(null);
-
-            animalsRepository.init();
-            Map<String, List<Animal>> expectedMap = animalsRepository.findDuplicate();
-
+            List<Animal> animals = new ArrayList<>();
+            animals.add(null);
+            Map<String, List<Animal>> expectedMap = operationsWithAnimalsService.findDuplicate(animals);
             Assertions.assertTrue(expectedMap.isEmpty());
         }
 
         @Test
         @DisplayName("Проверка findDuplicate при множестве одинаковых животных")
         public void findDuplicateAmongTheSame() {
-            when(createAnimalService.createRandomAnimal()).thenReturn(new Cat("breed", "Barsik", LocalDate.ofYearDay(1, 1)));
+            Animal animal = new Cat("breed", "Barsik", LocalDate.ofYearDay(1, 1));
+            List<Animal> animals = List.of(animal, animal, animal);
 
-            animalsRepository.init();
-            Map<String, List<Animal>> expectedMap = animalsRepository.findDuplicate();
+            Map<String, List<Animal>> expectedMap = operationsWithAnimalsService.findDuplicate(animals);
 
             Assertions.assertEquals(1, expectedMap.size());
-            Assertions.assertEquals(10, expectedMap.get("Cat").size());
+            Assertions.assertEquals(animals.size(), expectedMap.get("Cat").size());
         }
     }
 
@@ -167,25 +146,26 @@ public class AnimalStarterTest {
         @Test
         @DisplayName("Проверка, что нет NPE при массиве animals равном null")
         public void animalsIsNull() {
-            Assertions.assertEquals(0, animalsRepository.findAverageAge());
+            Assertions.assertEquals(0, operationsWithAnimalsService.findAverageAge(null));
         }
 
         @Test
         @DisplayName("Проверка, что нет NPE при элементе массива равном null")
         public void eachAnimalIsNull() {
-            when(createAnimalService.createRandomAnimal()).thenReturn(null);
-            animalsRepository.init();
-            Assertions.assertEquals(0, animalsRepository.findAverageAge());
+            List<Animal> animals = new ArrayList<>();
+            animals.add(null);
+            animals.add(null);
+            Assertions.assertEquals(0, operationsWithAnimalsService.findAverageAge(animals));
         }
 
         @Test
         @DisplayName("Проверка правильности рассчета среднего значения")
         public void checkCorrectCalculate() {
-            animalsRepository.setAnimals(List.of(
+            List<Animal> animals = List.of(
                     new Cat("", "", LocalDate.now().minusYears(10)),
                     new Cat("", "", LocalDate.now().minusYears(5))
-            ));
-            Assertions.assertEquals(7.5, animalsRepository.findAverageAge());
+            );
+            Assertions.assertEquals(7.5, operationsWithAnimalsService.findAverageAge(animals));
         }
 
         @Test
@@ -193,10 +173,9 @@ public class AnimalStarterTest {
         public void checkCorrectCalculateWithNullAnimal() {
             List<Animal> animals = new ArrayList<>();
             animals.add(new Cat("", "", LocalDate.now().minusYears(10)));
-            animals.add(null);
             animals.add(new Cat("", "", LocalDate.now().minusYears(5)));
-            animalsRepository.setAnimals(animals);
-            Assertions.assertEquals(7.5, animalsRepository.findAverageAge());
+            animals.add(null);
+            Assertions.assertEquals(7.5, operationsWithAnimalsService.findAverageAge(animals));
         }
     }
 
@@ -205,13 +184,13 @@ public class AnimalStarterTest {
         @Test
         @DisplayName("Проверка, что нет NPE при массиве animals равном null")
         public void animalsIsNull() {
-            Assertions.assertTrue(animalsRepository.findOldAndExpensive().isEmpty());
+            Assertions.assertTrue(operationsWithAnimalsService.findOldAndExpensive(null).isEmpty());
         }
 
         @Test
         @DisplayName("Проверка отбора и сортировки возвращаемых данных")
         public void checkSortAndFilter() {
-            List<Animal> animals = List.of(
+            List<Animal> actualAnimals = List.of(
                     new Cat("", LocalDate.ofYearDay(1, 1), BigDecimal.valueOf(0)),
                     new Cat("", LocalDate.now(), BigDecimal.valueOf(10)),
                     new Cat("", LocalDate.ofYearDay(1, 5), BigDecimal.valueOf(10)),
@@ -220,65 +199,70 @@ public class AnimalStarterTest {
                     new Cat("", LocalDate.now().minusYears(5), BigDecimal.valueOf(10)),
                     new Cat("", LocalDate.now().minusYears(6), BigDecimal.valueOf(10))
             );
-            animalsRepository.setAnimals(animals);
             List<Animal> expectedAnimals = List.of(
                     new Cat("", LocalDate.ofYearDay(1, 4), BigDecimal.valueOf(10)),
                     new Cat("", LocalDate.ofYearDay(1, 5), BigDecimal.valueOf(10)),
                     new Cat("", LocalDate.ofYearDay(1, 6), BigDecimal.valueOf(10)),
                     new Cat("", LocalDate.now().minusYears(6), BigDecimal.valueOf(10))
             );
-            Assertions.assertEquals(expectedAnimals, animalsRepository.findOldAndExpensive());
+            Assertions.assertEquals(expectedAnimals, operationsWithAnimalsService.findOldAndExpensive(actualAnimals));
         }
     }
 
     @Nested
     class FindMinConstAnimals {
         @Test
-        @DisplayName("Проверка, что нет NPE при массиве animals равном null")
+        @DisplayName("Проверка, что есть NPE при массиве animals равном null")
         public void animalsIsNull() {
-            Assertions.assertTrue(animalsRepository.findMinConstAnimals().isEmpty());
+            Assertions.assertThrows(NullPointerException.class,
+                    () -> operationsWithAnimalsService.findMinConstAnimals(null));
+        }
+
+        @Test
+        @DisplayName("Проверка, что при недостаточном размере массиве выбрасывается ошибка IllegalArraySizeException")
+        public void checkThrowIllegalArraySizeException() {
+            List<Animal> animals = Mockito.mock(List.class);
+
+            Mockito.when(animals.size()).thenReturn(2);
+            Assertions.assertThrows(IllegalArraySizeException.class,
+                    () -> operationsWithAnimalsService.findMinConstAnimals(animals));
+
+            Mockito.when(animals.size()).thenReturn(3);
+            Assertions.assertDoesNotThrow(() -> operationsWithAnimalsService.findMinConstAnimals(animals));
         }
 
         @Test
         @DisplayName("Проверка, что нет NPE при элементе массива равном null")
-        public void eachAnimalIsNull() {
-            when(createAnimalService.createRandomAnimal()).thenReturn(null);
-            animalsRepository.init();
-            Assertions.assertTrue(animalsRepository.findMinConstAnimals().isEmpty());
+        public void eachAnimalIsNull() throws IllegalArraySizeException {
+            List<Animal> animals = new ArrayList<>();
+            animals.add(null);
+            animals.add(null);
+            animals.add(null);
+            Assertions.assertTrue(operationsWithAnimalsService.findMinConstAnimals(animals).isEmpty());
         }
 
         @Test
         @DisplayName("Проверка ограничения размера получаемой коллекции")
-        public void checkSizeList() {
+        public void checkSizeList() throws IllegalArraySizeException {
             Dog dog = new Dog("", "", LocalDate.now());
             dog.setCost(BigDecimal.valueOf(1000));
-            when(createAnimalService.createRandomAnimal()).thenReturn(dog);
-            animalsRepository.init();
-            Assertions.assertEquals(3, animalsRepository.findMinConstAnimals().size());
+            List<Animal> animals = List.of(dog, dog, dog, dog, dog);
+            Assertions.assertEquals(3, operationsWithAnimalsService.findMinConstAnimals(animals).size());
         }
 
         @Test
         @DisplayName("Проверка отбора и сортировки возвращаемых данных")
-        public void checkSortFilter() {
-            animalsRepository.setAnimals(List.of(
+        public void checkSortFilter() throws IllegalArraySizeException {
+            List<Animal> animals = List.of(
                     new Cat("C", LocalDate.now(), BigDecimal.valueOf(1)),
                     new Cat("B", LocalDate.now(), BigDecimal.valueOf(0)),
                     new Cat("A", LocalDate.now(), BigDecimal.valueOf(3)),
                     new Cat("", LocalDate.now(), BigDecimal.valueOf(10)),
                     new Cat("", LocalDate.now(), BigDecimal.valueOf(10)),
                     new Cat("", LocalDate.now(), BigDecimal.valueOf(10))
-            ));
+            );
             List<String> expectedResult = List.of("C", "B", "A");
-            Assertions.assertEquals(expectedResult, animalsRepository.findMinConstAnimals());
-        }
-    }
-
-    @TestConfiguration
-    public static class Conf {
-        // Не знал какой бин можно подменить, поэтому замокал сервис вручную))
-        @Bean
-        public CreateAnimalService createAnimalService() {
-            return mock(CreateAnimalServiceImpl.class);
+            Assertions.assertEquals(expectedResult, operationsWithAnimalsService.findMinConstAnimals(animals));
         }
     }
 }

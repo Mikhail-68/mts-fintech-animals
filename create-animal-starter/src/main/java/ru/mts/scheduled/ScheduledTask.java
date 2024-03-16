@@ -1,28 +1,53 @@
 package ru.mts.scheduled;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import ru.mts.repository.AnimalsRepositoryImpl;
+import ru.mts.exception.IllegalArraySizeException;
+import ru.mts.exception.NegativeNumberException;
+import ru.mts.model.Animal;
+import ru.mts.service.CreateAnimalService;
+import ru.mts.service.OperationsWithAnimalsService;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Component
 public class ScheduledTask {
 
-    private final AnimalsRepositoryImpl animalsRepository;
+    private final OperationsWithAnimalsService operationsWithAnimalsService;
+    private final CreateAnimalService createAnimalService;
 
-    public ScheduledTask(AnimalsRepositoryImpl animalsRepository) {
-        this.animalsRepository = animalsRepository;
+    @Autowired
+    public ScheduledTask(OperationsWithAnimalsService operationsWithAnimalsService, CreateAnimalService createAnimalService) {
+        this.operationsWithAnimalsService = operationsWithAnimalsService;
+        this.createAnimalService = createAnimalService;
     }
 
     @Scheduled(fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
     public void print() {
-        System.out.println("\n\n=== repo === " + animalsRepository.getAnimals());
-        System.out.println("\n\n=== olderAnimals === " + animalsRepository.findOlderAnimal(10));
-        System.out.println("\n\n=== leapYearAnimals === " + animalsRepository.findLeapYearNames());
-        System.out.println("\n\n=== findDuplicate === " + animalsRepository.findDuplicate());
-        System.out.println("\n\n=== findAverageAge === " + animalsRepository.findAverageAge());
-        System.out.println("\n\n=== findOldAndExpensive === " + animalsRepository.findOldAndExpensive());
-        System.out.println("\n\n=== findMinConstAnimals === " + animalsRepository.findMinConstAnimals());
+        List<Animal> animals = createAnimalService.createListRandomAnimals(10);
+
+        System.out.println("\n\n");
+        try {
+            System.out.println("\n=== olderAnimals === ");
+            System.out.print(operationsWithAnimalsService.findOlderAnimal(animals, -1));
+        } catch (NegativeNumberException e) {
+            System.out.println(e.getMessage());
+        }
+
+        System.out.println("\n=== leapYearAnimals === " + operationsWithAnimalsService.findLeapYearNames(animals));
+        System.out.println("\n=== findDuplicate === " + operationsWithAnimalsService.findDuplicate(animals));
+        System.out.println("\n=== findAverageAge === " + operationsWithAnimalsService.findAverageAge(animals));
+        System.out.println("\n=== findOldAndExpensive === " + operationsWithAnimalsService.findOldAndExpensive(animals));
+
+        try {
+            System.out.println("\n=== findMinConstAnimals === ");
+            System.out.print(operationsWithAnimalsService.findMinConstAnimals(createAnimalService.createListRandomAnimals(1)));
+        } catch (NullPointerException e) {
+            System.out.println(e.getClass().getSimpleName());
+        } catch (IllegalArraySizeException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

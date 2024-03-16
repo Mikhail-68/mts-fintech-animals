@@ -1,6 +1,6 @@
-package ru.mts.createAnimal;
+package ru.mts.service;
 
-import org.springframework.lang.NonNull;
+import ru.mts.exception.NegativeNumberException;
 import ru.mts.model.*;
 import ru.mts.properties.AnimalsProperties;
 
@@ -9,13 +9,18 @@ import java.util.*;
 public interface CreateAnimalService {
 
     /**
-     * Создание 10 случайных животных
-     * @return массив из 10 случайных животных
+     * Создание Map из n случайных животных
+     *
+     * @param n количество животных
+     * @return массив из n случайных животных
+     * @throws NegativeNumberException если параметр n меньше нуля
      */
-    default Map<String, List<Animal>> create10Animals() {
+    default Map<String, List<Animal>> createMapRandomAnimals(int n) {
+        if (n < 0) throw new NegativeNumberException(n);
+
         Map<String, List<Animal>> animalsMap = new HashMap<>();
         int i = 0;
-        while (i < 10) {
+        while (i < n) {
             Animal animal = createRandomAnimal();
             List<Animal> animalList = animalsMap.getOrDefault(animal.getClass().getSimpleName(), new ArrayList<>());
             animalList.add(animal);
@@ -26,7 +31,23 @@ public interface CreateAnimalService {
     }
 
     /**
+     * Создание списка из n случайных животных
+     *
+     * @param n размер списка
+     * @return список рандомных животных
+     */
+    default List<Animal> createListRandomAnimals(int n) {
+        if (n < 0) throw new NegativeNumberException(n);
+        List<Animal> animals = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            animals.add(createRandomAnimal());
+        }
+        return animals;
+    }
+
+    /**
      * Создание случайного животного
+     *
      * @return случайное животное
      */
     default Animal createRandomAnimal() {
@@ -47,7 +68,8 @@ public interface CreateAnimalService {
 
     /**
      * Вывод в консоль животного
-     * @param someAnimal - животное
+     *
+     * @param someAnimal животное
      */
     default void printCreatedAnimal(Animal someAnimal) {
         System.out.println("Создано животное: " + someAnimal.getName());
