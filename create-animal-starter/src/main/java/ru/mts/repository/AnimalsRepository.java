@@ -3,8 +3,8 @@ package ru.mts.repository;
 import ru.mts.model.Animal;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public interface AnimalsRepository {
     /**
@@ -24,10 +24,23 @@ public interface AnimalsRepository {
      * Поиск дублирующихся животных
      * @return массив животных
      */
-    Map<String, Integer> findDuplicate();
+    Map<String, List<Animal>> findDuplicate();
 
     /**
-     * Вывод дублирующихся животных в консоль
+     *
+     * @return Средний возраст всех животных
      */
-    void printDuplicate();
+    double findAverageAge();
+
+    /**
+     * Находит животных, возраст которых больше 5 лет и стоимость которых больше средней стоимости всех животных
+     * @return Отсортированный по дате рождения список
+     */
+    List<Animal> findOldAndExpensive();
+
+    /**
+     * Ищет трех животных с самой низкой ценой
+     * @return Список имен, отсортированный в обратном алфавитном порядке
+     */
+    List<String> findMinConstAnimals();
 }

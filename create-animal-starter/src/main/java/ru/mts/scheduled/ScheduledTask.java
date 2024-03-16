@@ -4,7 +4,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import ru.mts.repository.AnimalsRepositoryImpl;
 
-import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -22,5 +21,8 @@ public class ScheduledTask {
         System.out.println("\n\n=== olderAnimals === " + animalsRepository.findOlderAnimal(10));
         System.out.println("\n\n=== leapYearAnimals === " + animalsRepository.findLeapYearNames());
         System.out.println("\n\n=== findDuplicate === " + animalsRepository.findDuplicate());
+        System.out.println("\n\n=== findAverageAge === " + animalsRepository.findAverageAge());
+        System.out.println("\n\n=== findOldAndExpensive === " + animalsRepository.findOldAndExpensive());
+        System.out.println("\n\n=== findMinConstAnimals === " + animalsRepository.findMinConstAnimals());
     }
 }
