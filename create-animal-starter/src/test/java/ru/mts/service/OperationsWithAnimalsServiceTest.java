@@ -11,8 +11,6 @@ import ru.mts.exception.NegativeNumberException;
 import ru.mts.model.Animal;
 import ru.mts.model.Cat;
 import ru.mts.model.Dog;
-import ru.mts.service.CreateAnimalService;
-import ru.mts.service.OperationsWithAnimalsService;
 import ru.mts.service.impl.OperationsWithAnimalsServiceImpl;
 
 import java.math.BigDecimal;
