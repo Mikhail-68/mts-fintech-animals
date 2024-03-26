@@ -58,6 +58,8 @@ public class OperationsWithAnimalsServiceImpl implements OperationsWithAnimalsSe
 
         return animals.stream()
                 .filter(Objects::nonNull)
+                .filter(animal -> Collections.frequency(animals, animal) > 1)
+                .distinct()
                 .collect(Collectors.groupingByConcurrent(
                         animal -> animal.getClass().getSimpleName(),
                         Collectors.collectingAndThen(Collectors.toList(), CopyOnWriteArrayList::new)));
