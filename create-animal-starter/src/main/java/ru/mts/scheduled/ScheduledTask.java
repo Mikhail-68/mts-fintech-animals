@@ -9,7 +9,10 @@ import ru.mts.model.Animal;
 import ru.mts.service.CreateAnimalService;
 import ru.mts.service.OperationsWithAnimalsService;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -18,16 +21,35 @@ public class ScheduledTask {
     private final OperationsWithAnimalsService operationsWithAnimalsService;
     private final CreateAnimalService createAnimalService;
 
+    private List<Animal> animals;
+
     @Autowired
     public ScheduledTask(OperationsWithAnimalsService operationsWithAnimalsService, CreateAnimalService createAnimalService) {
         this.operationsWithAnimalsService = operationsWithAnimalsService;
         this.createAnimalService = createAnimalService;
     }
 
+    @PostConstruct
+    public void init() {
+        animals = createAnimalService.createListRandomAnimals(10);
+        animals.set(3, animals.get(7));
+        animals.set(8, animals.get(5));
+
+        ScheduledExecutorService es = Executors.newScheduledThreadPool(2);
+        es.scheduleAtFixedRate(() -> {
+            Thread.currentThread().setName("printDuplicatedThread");
+            System.out.println("Current thread: " + Thread.currentThread().getName() +
+                    "\n\t " + operationsWithAnimalsService.findDuplicate(animals));
+        }, 0, 5, TimeUnit.SECONDS);
+        es.scheduleWithFixedDelay(() -> {
+            Thread.currentThread().setName("findAverageAgeThread");
+            System.out.println("Current thread: " + Thread.currentThread().getName() +
+                    "\n\t " + operationsWithAnimalsService.findAverageAge(animals));
+        }, 0, 10, TimeUnit.SECONDS);
+    }
+
     @Scheduled(fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
     public void print() {
-        List<Animal> animals = createAnimalService.createListRandomAnimals(10);
-
         System.out.println("\n\n");
         try {
             System.out.println("\n=== olderAnimals === ");

@@ -9,6 +9,7 @@ import ru.mts.service.OperationsWithAnimalsService;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 @Repository
@@ -19,7 +20,7 @@ public class OperationsWithAnimalsServiceImpl implements OperationsWithAnimalsSe
         if (animals == null) return Collections.emptyMap();
         return animals.stream()
                 .filter(animal -> Objects.nonNull(animal) && animal.getBirthdate().isLeapYear())
-                .collect(Collectors.toMap(
+                .collect(Collectors.toConcurrentMap(
                         animal -> animal.getClass().getSimpleName() + " " + animal.getName(),
                         Animal::getBirthdate,
                         (x, y) -> y
@@ -33,7 +34,7 @@ public class OperationsWithAnimalsServiceImpl implements OperationsWithAnimalsSe
 
         Map<Animal, Integer> resMap = animals.stream()
                 .filter(animal -> Objects.nonNull(animal) && LocalDate.now().compareTo(animal.getBirthdate().plusYears(age)) > 0)
-                .collect(Collectors.toMap(
+                .collect(Collectors.toConcurrentMap(
                         animal -> animal,
                         animal -> Period.between(animal.getBirthdate(), LocalDate.now()).getYears(),
                         (x, y) -> y
@@ -44,7 +45,7 @@ public class OperationsWithAnimalsServiceImpl implements OperationsWithAnimalsSe
                 .filter(Objects::nonNull)
                 .sorted(Comparator.comparing(Animal::getBirthdate).reversed())
                 .limit(1)
-                .collect(Collectors.toMap(
+                .collect(Collectors.toConcurrentMap(
                         animal -> animal,
                         animal -> Period.between(animal.getBirthdate(), LocalDate.now()).getYears(),
                         (x, y) -> y
@@ -57,7 +58,11 @@ public class OperationsWithAnimalsServiceImpl implements OperationsWithAnimalsSe
 
         return animals.stream()
                 .filter(Objects::nonNull)
-                .collect(Collectors.groupingBy(animal -> animal.getClass().getSimpleName()));
+                .filter(animal -> Collections.frequency(animals, animal) > 1)
+                .distinct()
+                .collect(Collectors.groupingByConcurrent(
+                        animal -> animal.getClass().getSimpleName(),
+                        Collectors.collectingAndThen(Collectors.toList(), CopyOnWriteArrayList::new)));
     }
 
     @Override
@@ -81,7 +86,7 @@ public class OperationsWithAnimalsServiceImpl implements OperationsWithAnimalsSe
                 .filter(animal -> Period.between(animal.getBirthdate(), LocalDate.now()).getYears() > 5)
                 .filter(animal -> animal.getCost().doubleValue() > averageCost)
                 .sorted(Comparator.comparing(Animal::getBirthdate))
-                .collect(Collectors.toList());
+                .collect(Collectors.collectingAndThen(Collectors.toList(), CopyOnWriteArrayList::new));
     }
 
     @Override
@@ -94,6 +99,6 @@ public class OperationsWithAnimalsServiceImpl implements OperationsWithAnimalsSe
                 .limit(3)
                 .map(Animal::getName)
                 .sorted(Comparator.reverseOrder())
-                .collect(Collectors.toList());
+                .collect(Collectors.collectingAndThen(Collectors.toList(), CopyOnWriteArrayList::new));
     }
 }

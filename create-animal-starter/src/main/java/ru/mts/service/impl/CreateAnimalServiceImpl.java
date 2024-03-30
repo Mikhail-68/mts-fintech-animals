@@ -10,6 +10,8 @@ import ru.mts.service.CreateAnimalService;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Service
 public class CreateAnimalServiceImpl implements CreateAnimalService {
@@ -24,7 +26,7 @@ public class CreateAnimalServiceImpl implements CreateAnimalService {
     }
 
     public List<Animal> create10CustomAnimals() {
-        List<Animal> animals = new ArrayList<>();
+        List<Animal> animals = new CopyOnWriteArrayList<>();
         animals.add(new Cat("breed1", "Cat1", LocalDate.ofYearDay(2000, 135)));
         animals.add(new Dog("breed2", "Dog1", LocalDate.ofYearDay(2004, 300)));
         animals.add(new Shark("breed1", "Shark1", LocalDate.ofYearDay(1999, 111)));
@@ -42,12 +44,12 @@ public class CreateAnimalServiceImpl implements CreateAnimalService {
     public Map<String, List<Animal>> createMapRandomAnimals(int n) {
         if (n < 0) throw new NegativeNumberException(n);
         if(n == 0) return Collections.emptyMap();
-        Map<String, List<Animal>> animalsMap = new HashMap<>();
+        Map<String, List<Animal>> animalsMap = new ConcurrentHashMap<>();
         int i = n;
         do {
             i--;
             Animal animal = createRandomAnimal();
-            List<Animal> animalList = animalsMap.getOrDefault(animal.getClass().getSimpleName(), new ArrayList<>());
+            List<Animal> animalList = animalsMap.getOrDefault(animal.getClass().getSimpleName(), new CopyOnWriteArrayList<>());
             animalList.add(animal);
             animalsMap.put(animal.getClass().getSimpleName(), animalList);
         } while (i > 0);

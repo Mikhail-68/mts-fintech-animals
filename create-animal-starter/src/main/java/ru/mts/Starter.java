@@ -8,7 +8,7 @@ import ru.mts.properties.AnimalsProperties;
 
 @SpringBootConfiguration
 @EnableConfigurationProperties(AnimalsProperties.class)
-@EnableScheduling
+//@EnableScheduling
 @ComponentScan
 public class Starter {
 }

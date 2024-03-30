@@ -21,7 +21,7 @@ public abstract class AbstractAnimal implements Animal {
     public AbstractAnimal() {
         Random random = new Random();
         birthdate = LocalDate.ofYearDay(
-                LocalDate.now().getYear() - random.nextInt(15), random.nextInt(365));
+                LocalDate.now().getYear() - random.nextInt(15), random.nextInt(360));
         cost = BigDecimal.valueOf(random.nextInt(1000, 10000));
     }
 

@@ -5,6 +5,8 @@ import ru.mts.model.*;
 import ru.mts.properties.AnimalsProperties;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public interface CreateAnimalService {
 
@@ -18,11 +20,11 @@ public interface CreateAnimalService {
     default Map<String, List<Animal>> createMapRandomAnimals(int n) {
         if (n < 0) throw new NegativeNumberException(n);
 
-        Map<String, List<Animal>> animalsMap = new HashMap<>();
+        Map<String, List<Animal>> animalsMap = new ConcurrentHashMap<>();
         int i = 0;
         while (i < n) {
             Animal animal = createRandomAnimal();
-            List<Animal> animalList = animalsMap.getOrDefault(animal.getClass().getSimpleName(), new ArrayList<>());
+            List<Animal> animalList = animalsMap.getOrDefault(animal.getClass().getSimpleName(), new CopyOnWriteArrayList<>());
             animalList.add(animal);
             animalsMap.put(animal.getClass().getTypeName(), animalList);
             i++;
@@ -38,7 +40,7 @@ public interface CreateAnimalService {
      */
     default List<Animal> createListRandomAnimals(int n) {
         if (n < 0) throw new NegativeNumberException(n);
-        List<Animal> animals = new ArrayList<>();
+        List<Animal> animals = new CopyOnWriteArrayList<>();
         for (int i = 0; i < n; i++) {
             animals.add(createRandomAnimal());
         }

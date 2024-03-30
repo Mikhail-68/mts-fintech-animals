@@ -11,8 +11,6 @@ import ru.mts.exception.NegativeNumberException;
 import ru.mts.model.Animal;
 import ru.mts.model.Cat;
 import ru.mts.model.Dog;
-import ru.mts.service.CreateAnimalService;
-import ru.mts.service.OperationsWithAnimalsService;
 import ru.mts.service.impl.OperationsWithAnimalsServiceImpl;
 
 import java.math.BigDecimal;
@@ -105,8 +103,8 @@ public class OperationsWithAnimalsServiceTest {
         public void returnAnimalsTest(int age) {
             Animal animal = new Cat("", "", LocalDate.ofYearDay(2020, 1));
             List<Animal> animals = List.of(animal);
-            Map<Animal, Integer> crntAnimals = operationsWithAnimalsService.findOlderAnimal(animals, age);
-            Assertions.assertEquals(Period.between(animal.getBirthdate(), LocalDate.now()).getYears(), crntAnimals.get(animal));
+            Map<Animal, Integer> actualAnimals = operationsWithAnimalsService.findOlderAnimal(animals, age);
+            Assertions.assertEquals(Period.between(animal.getBirthdate(), LocalDate.now()).getYears(), actualAnimals.get(animal));
         }
     }
 
@@ -124,8 +122,8 @@ public class OperationsWithAnimalsServiceTest {
         public void findDuplicateWhereEachAnimalIsNull() {
             List<Animal> animals = new ArrayList<>();
             animals.add(null);
-            Map<String, List<Animal>> expectedMap = operationsWithAnimalsService.findDuplicate(animals);
-            Assertions.assertTrue(expectedMap.isEmpty());
+            Map<String, List<Animal>> actualMap = operationsWithAnimalsService.findDuplicate(animals);
+            Assertions.assertTrue(actualMap.isEmpty());
         }
 
         @Test
@@ -134,10 +132,22 @@ public class OperationsWithAnimalsServiceTest {
             Animal animal = new Cat("breed", "Barsik", LocalDate.ofYearDay(1, 1));
             List<Animal> animals = List.of(animal, animal, animal);
 
-            Map<String, List<Animal>> expectedMap = operationsWithAnimalsService.findDuplicate(animals);
+            Map<String, List<Animal>> actualMap = operationsWithAnimalsService.findDuplicate(animals);
+            Assertions.assertEquals(1, actualMap.size());
+            Assertions.assertEquals(1, actualMap.get("Cat").size());
+        }
 
-            Assertions.assertEquals(1, expectedMap.size());
-            Assertions.assertEquals(animals.size(), expectedMap.get("Cat").size());
+        @Test
+        @DisplayName("Проверка возвращения пустой коллекции при списке без дупликатов")
+        public void checkReturnEmptyMapWhenAnimalsWithNotContainsDuplicate() {
+            Animal animal = new Cat("breed", "Barsik", LocalDate.ofYearDay(1, 1));
+            Animal animal2 = new Cat("breed", "Umka", LocalDate.ofYearDay(1, 1));
+            Animal animal3 = new Cat("breed", "Murzik", LocalDate.ofYearDay(1, 1));
+            List<Animal> animals = List.of(animal, animal2, animal3);
+
+            Map<String, List<Animal>> actualMap = operationsWithAnimalsService.findDuplicate(animals);
+
+            Assertions.assertTrue(actualMap.isEmpty());
         }
     }
 
@@ -165,7 +175,8 @@ public class OperationsWithAnimalsServiceTest {
                     new Cat("", "", LocalDate.now().minusYears(10)),
                     new Cat("", "", LocalDate.now().minusYears(5))
             );
-            Assertions.assertEquals(7.5, operationsWithAnimalsService.findAverageAge(animals));
+            double actualResult = operationsWithAnimalsService.findAverageAge(animals);
+            Assertions.assertEquals(7.5, actualResult);
         }
 
         @Test
