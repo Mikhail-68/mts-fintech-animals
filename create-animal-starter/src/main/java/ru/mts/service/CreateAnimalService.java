@@ -1,10 +1,10 @@
 package ru.mts.service;
 
 import ru.mts.exception.NegativeNumberException;
-import ru.mts.model.*;
-import ru.mts.properties.AnimalsProperties;
+import ru.mts.model.Animal;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -37,36 +37,16 @@ public interface CreateAnimalService {
      *
      * @param n размер списка
      * @return список рандомных животных
+     * @throws NegativeNumberException при отрицательном размере списка
      */
-    default List<Animal> createListRandomAnimals(int n) {
-        if (n < 0) throw new NegativeNumberException(n);
-        List<Animal> animals = new CopyOnWriteArrayList<>();
-        for (int i = 0; i < n; i++) {
-            animals.add(createRandomAnimal());
-        }
-        return animals;
-    }
+    List<Animal> createListRandomAnimals(int n);
 
     /**
      * Создание случайного животного
      *
      * @return случайное животное
      */
-    default Animal createRandomAnimal() {
-        int countAnimals = 4;
-        AbstractAnimal someAnimal;
-        int id = new Random().nextInt(countAnimals);
-        someAnimal = switch (id) {
-            case 0 -> new Wolf();
-            case 1 -> new Shark();
-            case 2 -> new Dog();
-            default -> new Cat();
-        };
-        Random random = new Random();
-        List<String> namesList = getAnimalsProperties().getNames();
-        someAnimal.setName(namesList.get(random.nextInt(namesList.size())));
-        return someAnimal;
-    }
+    Animal createRandomAnimal();
 
     /**
      * Вывод в консоль животного
@@ -77,5 +57,4 @@ public interface CreateAnimalService {
         System.out.println("Создано животное: " + someAnimal.getName());
     }
 
-    AnimalsProperties getAnimalsProperties();
 }

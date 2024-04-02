@@ -1,7 +1,11 @@
 package ru.mts.model;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonSetter;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Base64;
 
 public interface Animal {
     /**
@@ -33,4 +37,6 @@ public interface Animal {
      * @return получение дня рождения животного
      */
     LocalDate getBirthdate();
+
+    String getSecretInformation();
 }
