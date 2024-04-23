@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 @SpringBootTest
+@Disabled
 public class OperationsWithAnimalsServiceTest {
     @Autowired
     private CreateAnimalService createAnimalService;

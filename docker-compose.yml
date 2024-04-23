@@ -1,0 +1,15 @@
+version: '3.6'
+
+services:
+  postgres:
+    container_name: animals-postgresdb
+    image: postgres:latest
+    env_file: ./.env
+    environment:
+      POSTGRES_DB: ${POSTGRESDB_DATABASE}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - './data:/var/lib/postgresql/data'
+    ports:
+      - '${POSTGRES_LOCAL_PORT}:5432'

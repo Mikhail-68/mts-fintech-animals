@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-@Component
+//@Component
 public class ScheduledTask {
     @Value("${application.animal.directory.result}")
     private String resultsDirectory;
