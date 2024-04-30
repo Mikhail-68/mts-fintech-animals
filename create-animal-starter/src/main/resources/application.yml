@@ -1,5 +1,10 @@
 animal:
   names: [Taison, Jessi, Lord, Barsik, Kuzya, Murzik, Jack, Bonya]
+habitat:
+  area: [Savannah, Forest, Ocean, Desert, Jungle]
+provider:
+  name: [Zoo A, Zoo B, Wildlife Sanctuary, Predator Store, Animal Shelter]
+  phone: [123-456-7890, 987-654-3210, 555-555-5555, 777-777-7777, 999-999-9999]
 
 spring:
   datasource:

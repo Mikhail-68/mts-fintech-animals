@@ -1,7 +1,7 @@
 package ru.mts.service;
 
+import ru.mts.entity.Animal;
 import ru.mts.exception.NegativeNumberException;
-import ru.mts.model.Animal;
 
 import java.util.List;
 import java.util.Map;

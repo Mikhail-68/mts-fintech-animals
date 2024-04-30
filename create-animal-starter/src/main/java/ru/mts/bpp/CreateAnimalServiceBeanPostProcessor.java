@@ -10,13 +10,13 @@ import java.util.Random;
 
 @Configuration
 public class CreateAnimalServiceBeanPostProcessor implements BeanPostProcessor {
-    @Override
-    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        if(bean.getClass() == CreateAnimalServiceImpl.class) {
-            CreateAnimalServiceImpl animalService = (CreateAnimalServiceImpl) bean;
-            AnimalType[] animalTypes = AnimalType.values();
-            animalService.setAnimalType(animalTypes[new Random().nextInt(0, animalTypes.length)]);
-        }
-        return bean;
-    }
+//    @Override
+//    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+//        if(bean.getClass() == CreateAnimalServiceImpl.class) {
+//            CreateAnimalServiceImpl animalService = (CreateAnimalServiceImpl) bean;
+//            AnimalType[] animalTypes = AnimalType.values();
+//            animalService.setAnimalType(animalTypes[new Random().nextInt(0, animalTypes.length)]);
+//        }
+//        return bean;
+//    }
 }

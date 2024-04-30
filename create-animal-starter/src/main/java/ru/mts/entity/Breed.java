@@ -3,6 +3,7 @@ package ru.mts.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -11,15 +12,12 @@ import javax.persistence.*;
 @EqualsAndHashCode(exclude = "id")
 @Entity
 @Table(schema = "animals")
-public class Provider {
+public class Breed {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String name;
-    private String phone;
+    private String breed;
 
-    public Provider(String name, String phone) {
-        this.name = name;
-        this.phone = phone;
-    }
+    @OneToMany(mappedBy = "breed")
+    private List<Animal> animals;
 }
