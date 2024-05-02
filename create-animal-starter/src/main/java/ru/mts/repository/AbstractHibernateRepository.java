@@ -2,6 +2,7 @@ package ru.mts.repository;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.postgresql.shaded.com.ongres.scram.common.util.Preconditions;
 
 import java.util.List;
@@ -34,9 +35,9 @@ public abstract class AbstractHibernateRepository<T> {
 
     public void create(final T entity) {
         Preconditions.checkNotNull(entity, null);
-        getCurrentSession().beginTransaction();
+        Transaction transaction = getCurrentSession().beginTransaction();
         getCurrentSession().saveOrUpdate(entity);
-        getCurrentSession().close();
+        transaction.commit();
     }
 
     public T update(final T entity) {

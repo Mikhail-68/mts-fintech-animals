@@ -12,6 +12,7 @@ import ru.mts.properties.AnimalsProperties;
 import ru.mts.properties.HabitatProperties;
 import ru.mts.properties.ProviderProperties;
 import ru.mts.repository.AnimalRepository;
+import ru.mts.repository.HabitatRepository;
 import ru.mts.service.AnimalType;
 import ru.mts.service.CreateAnimalService;
 
@@ -43,6 +44,7 @@ public class CreateAnimalServiceImpl implements CreateAnimalService {
     private final HabitatProperties habitatProperties;
     private final ProviderProperties providerProperties;
     private final AnimalRepository animalRepository;
+    private final HabitatRepository habitatRepository;
 
     @Override
     public Map<String, List<Animal>> createMapRandomAnimals(int n) {
@@ -105,6 +107,7 @@ public class CreateAnimalServiceImpl implements CreateAnimalService {
         Random random = new Random();
         return Habitat.builder()
                 .area(habitatProperties.getArea().get(random.nextInt(habitatProperties.getArea().size())))
+                .animals(new HashSet<>())
                 .build();
     }
 
