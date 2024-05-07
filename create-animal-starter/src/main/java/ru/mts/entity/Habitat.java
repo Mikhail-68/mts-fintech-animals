@@ -17,6 +17,7 @@ import java.util.Set;
 public class Habitat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_area")
     private Integer id;
     private String area;
 

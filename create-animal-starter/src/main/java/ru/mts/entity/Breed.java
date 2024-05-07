@@ -15,6 +15,7 @@ import java.util.List;
 public class Breed {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_breed")
     private int id;
     private String breed;
 

@@ -11,15 +11,15 @@ spring:
     url: 'jdbc:postgresql://localhost:5430/animalsdb'
     username: postgres
     password: postgres
-    driver-class-name: 'org.postgresql.Driver'
-
-  sql:
-    init:
-      schema-locations: 'classpath:db/schema.sql'
-      data-locations: 'classpath:db/data.sql'
-      mode: never
-
-
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    default-schema: animals
+    user: postgres
+    password: postgres
+    url: 'jdbc:postgresql://localhost:5430/animalsdb'
 
 application:
   animal:

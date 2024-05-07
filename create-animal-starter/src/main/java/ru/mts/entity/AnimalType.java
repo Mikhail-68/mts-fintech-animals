@@ -15,12 +15,10 @@ import java.util.List;
 public class AnimalType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_type")
     private int id;
     private String type;
     private boolean isWild;
-
-    @OneToMany(mappedBy = "animalType")
-    List<Animal> animals;
 
     public AnimalType(String type, boolean isWild) {
         this.type = type;

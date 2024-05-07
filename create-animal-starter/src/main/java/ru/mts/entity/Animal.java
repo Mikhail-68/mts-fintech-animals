@@ -18,6 +18,7 @@ import java.util.Set;
 public class Animal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_animal")
     private Integer id;
     private String name;
     private BigDecimal cost;
@@ -25,7 +26,7 @@ public class Animal {
     private LocalDate birthdate;
 
     @ManyToOne
-    @JoinColumn(name = "animal_type_id")
+    @JoinColumn(name = "type_id")
     private AnimalType animalType;
 
     @ManyToOne
@@ -36,8 +37,8 @@ public class Animal {
     @JoinTable(
             schema = "animals",
             name = "animals_habitats",
-            joinColumns = @JoinColumn(name = "animal_id"),
-            inverseJoinColumns = @JoinColumn(name = "habitat_id")
+            joinColumns = @JoinColumn(name = "id_animal"),
+            inverseJoinColumns = @JoinColumn(name = "id_habitat")
     )
     private Set<Habitat> habitats = new HashSet<>();
 
@@ -45,8 +46,8 @@ public class Animal {
     @JoinTable(
             schema = "animals",
             name = "animals_providers",
-            joinColumns = @JoinColumn(name = "animal_id"),
-            inverseJoinColumns = @JoinColumn(name = "provider_id")
+            joinColumns = @JoinColumn(name = "id_animal"),
+            inverseJoinColumns = @JoinColumn(name = "id_provider")
     )
     private Set<Provider> providers = new HashSet<>();
 }

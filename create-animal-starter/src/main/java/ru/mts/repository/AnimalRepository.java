@@ -1,18 +1,7 @@
 package ru.mts.repository;
 
-import org.hibernate.SessionFactory;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import ru.mts.entity.Animal;
 
-@Repository
-public class AnimalRepository extends AbstractHibernateRepository<Animal> {
-
-    private final SessionFactory sessionFactory;
-
-    public AnimalRepository(SessionFactory sessionFactory) {
-        super(sessionFactory);
-        this.sessionFactory = sessionFactory;
-        setClazz(Animal.class);
-    }
-
+public interface AnimalRepository extends JpaRepository<Animal, Integer> {
 }

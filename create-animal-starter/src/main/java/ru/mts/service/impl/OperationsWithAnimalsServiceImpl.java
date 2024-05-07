@@ -126,17 +126,13 @@ public class OperationsWithAnimalsServiceImpl implements OperationsWithAnimalsSe
     public List<String> findMinConstAnimals(List<Animal> animals) throws IllegalArraySizeException {
         Objects.requireNonNull(animals);
         if (animals.size() < 3) throw new IllegalArraySizeException("Размер массива должен быть равен или больше 3");
-        CopyOnWriteArrayList<String> answer = animals.stream()
+        return animals.stream()
                 .filter(Objects::nonNull)
                 .sorted(Comparator.comparing(Animal::getCost))
                 .limit(3)
                 .map(Animal::getName)
                 .sorted(Comparator.reverseOrder())
                 .collect(Collectors.collectingAndThen(Collectors.toList(), CopyOnWriteArrayList::new));
-
-
-
-        return answer;
     }
 
     private void writeToFile(String file, Object obj) {

@@ -1,7 +1,6 @@
 package ru.mts.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.mts.entity.Animal;
@@ -12,7 +11,6 @@ import ru.mts.properties.AnimalsProperties;
 import ru.mts.properties.HabitatProperties;
 import ru.mts.properties.ProviderProperties;
 import ru.mts.repository.AnimalRepository;
-import ru.mts.repository.HabitatRepository;
 import ru.mts.service.AnimalType;
 import ru.mts.service.CreateAnimalService;
 
@@ -44,7 +42,6 @@ public class CreateAnimalServiceImpl implements CreateAnimalService {
     private final HabitatProperties habitatProperties;
     private final ProviderProperties providerProperties;
     private final AnimalRepository animalRepository;
-    private final HabitatRepository habitatRepository;
 
     @Override
     public Map<String, List<Animal>> createMapRandomAnimals(int n) {
@@ -95,10 +92,7 @@ public class CreateAnimalServiceImpl implements CreateAnimalService {
             habitats.add(createRandonHabitat());
         }
         animal.setHabitats(habitats);
-
-        System.out.println(animal);
-
-        animalRepository.create(animal);
+        animalRepository.save(animal);
         saveAnimalToFile(animal);
         return animal;
     }
