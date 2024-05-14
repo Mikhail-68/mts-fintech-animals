@@ -11,17 +11,14 @@ import java.util.List;
 @Builder
 @EqualsAndHashCode(exclude = "id")
 @Entity
-@Table(name = "animal_type", schema = "animals")
-public class AnimalType {
+@Table(schema = "animals")
+public class Breed {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_type")
+    @Column(name = "id_breed")
     private int id;
-    private String type;
-    private boolean isWild;
+    private String breed;
 
-    public AnimalType(String type, boolean isWild) {
-        this.type = type;
-        this.isWild = isWild;
-    }
+    @OneToMany(mappedBy = "breed")
+    private List<Animal> animals;
 }

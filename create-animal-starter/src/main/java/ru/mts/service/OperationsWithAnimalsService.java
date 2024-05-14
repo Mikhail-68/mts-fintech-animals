@@ -1,8 +1,8 @@
 package ru.mts.service;
 
+import ru.mts.entity.Animal;
 import ru.mts.exception.IllegalArraySizeException;
 import ru.mts.exception.NegativeNumberException;
-import ru.mts.model.Animal;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -52,7 +52,7 @@ public interface OperationsWithAnimalsService {
     List<Animal> findOldAndExpensive(List<Animal> animals);
 
     /**
-     * Ищет трех животных с самой низкой ценой
+     * т трех животных с самой низкой ценой
      *
      * @param animals список животных
      * @return Список имен, отсортированный в обратном алфавитном порядке

@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
+import ru.mts.entity.Animal;
 import ru.mts.exception.IllegalArraySizeException;
 import ru.mts.exception.NegativeNumberException;
-import ru.mts.model.Animal;
 import ru.mts.service.OperationsWithAnimalsService;
 
 import java.io.IOException;
@@ -126,17 +126,13 @@ public class OperationsWithAnimalsServiceImpl implements OperationsWithAnimalsSe
     public List<String> findMinConstAnimals(List<Animal> animals) throws IllegalArraySizeException {
         Objects.requireNonNull(animals);
         if (animals.size() < 3) throw new IllegalArraySizeException("Размер массива должен быть равен или больше 3");
-        CopyOnWriteArrayList<String> answer = animals.stream()
+        return animals.stream()
                 .filter(Objects::nonNull)
                 .sorted(Comparator.comparing(Animal::getCost))
                 .limit(3)
                 .map(Animal::getName)
                 .sorted(Comparator.reverseOrder())
                 .collect(Collectors.collectingAndThen(Collectors.toList(), CopyOnWriteArrayList::new));
-
-        writeToFile("findMinConstAnimals.json", answer);
-
-        return answer;
     }
 
     private void writeToFile(String file, Object obj) {

@@ -1,26 +1,31 @@
 package ru.mts.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import ru.mts.entity.Animal;
+import ru.mts.entity.Habitat;
+import ru.mts.entity.Provider;
 import ru.mts.exception.NegativeNumberException;
-import ru.mts.model.*;
 import ru.mts.properties.AnimalsProperties;
+import ru.mts.properties.HabitatProperties;
+import ru.mts.properties.ProviderProperties;
+import ru.mts.repository.AnimalRepository;
 import ru.mts.service.AnimalType;
 import ru.mts.service.CreateAnimalService;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Service
+@RequiredArgsConstructor
 public class CreateAnimalServiceImpl implements CreateAnimalService {
 
     @Value("${application.animal.log.path}")
@@ -32,12 +37,11 @@ public class CreateAnimalServiceImpl implements CreateAnimalService {
     private String secretInformationPath;
 
     private AnimalType animalType;
-    private final AnimalsProperties animalsProperties;
 
-    @Autowired
-    public CreateAnimalServiceImpl(AnimalsProperties animalsProperties) {
-        this.animalsProperties = animalsProperties;
-    }
+    private final AnimalsProperties animalsProperties;
+    private final HabitatProperties habitatProperties;
+    private final ProviderProperties providerProperties;
+    private final AnimalRepository animalRepository;
 
     @Override
     public Map<String, List<Animal>> createMapRandomAnimals(int n) {
@@ -67,29 +71,46 @@ public class CreateAnimalServiceImpl implements CreateAnimalService {
 
     @Override
     public Animal createRandomAnimal() {
-        int countAnimals = 4;
-        AbstractAnimal someAnimal;
-        int id = new Random().nextInt(countAnimals);
-        someAnimal = switch (id) {
-            case 0 -> new Wolf();
-            case 1 -> new Shark();
-            case 2 -> new Dog();
-            default -> new Cat();
-        };
+        Animal animal = new Animal();
+
         Random random = new Random();
         List<String> namesList = animalsProperties.getNames();
-        someAnimal.setName(namesList.get(random.nextInt(namesList.size())));
+        animal.setName(namesList.get(random.nextInt(namesList.size())));
+        animal.setBirthdate(LocalDate.now());
+        animal.setCost(BigDecimal.valueOf(random.nextInt(1000, 50000)));
 
-        Path path = Paths.get(secretInformationPath);
-        List<String> listSecretInformation;
-        try {
-            listSecretInformation = Files.readAllLines(path);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        int providersCount = random.nextInt(1,3);
+        Set<Provider> providers = new HashSet<>();
+        for (int i = 0; i < providersCount; i++) {
+            providers.add(createRandomProvider());
         }
-        someAnimal.setSecretInformation(listSecretInformation.get(random.nextInt(listSecretInformation.size())));
-        saveAnimalToFile(someAnimal);
-        return someAnimal;
+        animal.setProviders(providers);
+
+        int habitatsCount = random.nextInt(1, 3);
+        Set<Habitat> habitats = new HashSet<>();
+        for (int i = 0; i < habitatsCount; i++) {
+            habitats.add(createRandonHabitat());
+        }
+        animal.setHabitats(habitats);
+        animalRepository.save(animal);
+        saveAnimalToFile(animal);
+        return animal;
+    }
+
+    private Habitat createRandonHabitat() {
+        Random random = new Random();
+        return Habitat.builder()
+                .area(habitatProperties.getArea().get(random.nextInt(habitatProperties.getArea().size())))
+                .animals(new HashSet<>())
+                .build();
+    }
+
+    private Provider createRandomProvider() {
+        Random random = new Random();
+        return Provider.builder()
+                .name(providerProperties.getName().get(random.nextInt(providerProperties.getName().size())))
+                .phone(providerProperties.getPhone().get(random.nextInt(providerProperties.getPhone().size())))
+                .build();
     }
 
     private void saveAnimalToFile(Animal animal) {
@@ -101,7 +122,7 @@ public class CreateAnimalServiceImpl implements CreateAnimalService {
             List<String> list = Files.readAllLines(path);
             String str = String.format("%d. %s %s %s %s",
                     list.size() + 1, animal.getBreed(), animal.getName(),
-                    animal.getCost().toString(),animal.getBirthdate());
+                    animal.getCost().toString(), animal.getBirthdate());
             list.add(str);
             Files.write(path, list);
         } catch (IOException e) {
@@ -109,12 +130,12 @@ public class CreateAnimalServiceImpl implements CreateAnimalService {
         }
     }
 
-    public void setAnimalType(AnimalType animalType) {
-        this.animalType = animalType;
-    }
-
-    public Animal getAnimal() {
-        return animalType.getAnimal();
-    }
+//    public void setAnimalType(AnimalType animalType) {
+//        this.animalType = animalType;
+//    }
+//
+//    public Animal getAnimal() {
+//        return animalType.getAnimal();
+//    }
 
 }
