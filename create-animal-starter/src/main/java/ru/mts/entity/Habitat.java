@@ -1,5 +1,6 @@
 package ru.mts.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -21,6 +22,7 @@ public class Habitat {
     private Integer id;
     private String area;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "habitats", fetch = FetchType.EAGER)
     private Set<Animal> animals;
 

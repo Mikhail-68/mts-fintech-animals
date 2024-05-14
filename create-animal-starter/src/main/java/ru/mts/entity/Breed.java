@@ -1,5 +1,6 @@
 package ru.mts.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,6 +20,7 @@ public class Breed {
     private int id;
     private String breed;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "breed")
     private List<Animal> animals;
 }
