@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Animals</title>
+</head>
+<body>
+    <table>
+        <thead>
+        <title>Animals</title>
+        </thead>
+        <tbody>
+        <table border="4">
+            <thead>
+            <th>ID</th>
+            <th>name</th>
+            <th>cost</th>
+            <th>character</th>
+            <th>birthdate</th>
+            <th>animalType</th>
+            <th>breed</th>
+            <th>habitats</th>
+            <th>providers</th>
+            <th>* edit *</th>
+            <th>* delete *</th>
+            </thead>
+            <tbody>
+            <tr th:each="animal : ${animalList}">
+                <th th:text="${animal.id}"></th>
+                <th th:text="${animal.name}"></th>
+                <th th:text="${animal.cost}"></th>
+                <th th:text="${animal.character}"></th>
+                <th th:text="${animal.birthdate}"></th>
+                <th th:text="${animal.animalType}"></th>
+                <th th:text="${animal.breed}"></th>
+                <th th:text="${animal.habitats}"></th>
+                <th th:text="${animal.providers}"></th>
+
+                <th><form th:object="${animal}" th:action="@{/mvc/animal/edit/{id}(id=${animal.id})}" th:method="get">
+                    <input type="submit" name="action" value="edit">
+                </form></th>
+                <th><form th:object="${animal}" th:action="@{/mvc/animal/{id}(id=${animal.id})}" th:method="delete">
+                    <input type="submit" name="action" value="delete">
+                </form></th>
+            </tr>
+            </tbody>
+        </table>
+        </tbody>
+    </table>
+
+    <form th:action="@{/mvc/animal/add}" th:method="get">
+        <input type="submit" name="action" value="add">
+    </form>
+
+</body>
+</html>
+
+

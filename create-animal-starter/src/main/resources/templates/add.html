@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit</title>
+</head>
+<body>
+
+<thead>
+<title>Добавить животного</title>
+</thead>
+<tbody>
+<form action="#"
+      th:action="@{/mvc/animal/add}"
+      th:object="${animal}"
+      method="post">
+    <label for="name">name</label>
+    <input type="text" id="name" th:field="*{name}">
+    <label for="cost">cost</label>
+    <input type="text" id="cost" th:field="*{cost}">
+    <label for="character">character</label>
+    <input type="text" id="character" th:field="*{character}">
+    <label for="birthdate">birthdate</label>
+    <input type="date" id="birthdate" th:field="*{birthdate}">
+
+    <input type="submit" name="action" value="add">
+    <input type="submit" name="action" value="cancel">
+</form>
+</tbody>
+
+</body>
+</html>

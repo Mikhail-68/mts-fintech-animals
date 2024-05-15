@@ -13,7 +13,7 @@ import java.util.List;
 public class AnimalRestController {
     private final AnimalRepository animalRepository;
 
-    @GetMapping("/all")
+    @GetMapping
     public List<Animal> getAll(){
         return animalRepository.findAll();
     }
