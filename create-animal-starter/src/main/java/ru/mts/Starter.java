@@ -7,13 +7,12 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import ru.mts.properties.AnimalsProperties;
 
 import java.text.SimpleDateFormat;
 
 @SpringBootConfiguration
 @EnableConfigurationProperties
-@EnableScheduling
+//@EnableScheduling
 public class Starter {
 
     @Bean

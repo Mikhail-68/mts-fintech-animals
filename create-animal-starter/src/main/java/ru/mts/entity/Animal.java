@@ -1,6 +1,7 @@
 package ru.mts.entity;
 
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -23,6 +24,7 @@ public class Animal {
     private String name;
     private BigDecimal cost;
     private String character;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthdate;
 
     @ManyToOne
@@ -40,7 +42,7 @@ public class Animal {
             joinColumns = @JoinColumn(name = "id_animal"),
             inverseJoinColumns = @JoinColumn(name = "id_habitat")
     )
-    private Set<Habitat> habitats = new HashSet<>();
+    private Set<Habitat> habitats;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
@@ -49,5 +51,5 @@ public class Animal {
             joinColumns = @JoinColumn(name = "id_animal"),
             inverseJoinColumns = @JoinColumn(name = "id_provider")
     )
-    private Set<Provider> providers = new HashSet<>();
+    private Set<Provider> providers;
 }
