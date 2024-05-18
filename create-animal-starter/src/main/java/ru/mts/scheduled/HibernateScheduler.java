@@ -14,9 +14,13 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class HibernateScheduler {
     private final AnimalRepository animalRepository;
+    private final CreateAnimalService createAnimalService;
 
     @Scheduled(fixedDelay = 10, timeUnit = TimeUnit.SECONDS)
     private void scheduler() {
         log.info(animalRepository.findAll().toString());
+        createAnimalService.createRandomAnimal();
+        createAnimalService.createListRandomAnimals(5);
     }
+
 }

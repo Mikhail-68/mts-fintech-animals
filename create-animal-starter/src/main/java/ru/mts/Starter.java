@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat;
 
 @SpringBootConfiguration
 @EnableConfigurationProperties
-//@EnableScheduling
+@EnableScheduling
 public class Starter {
 
     @Bean

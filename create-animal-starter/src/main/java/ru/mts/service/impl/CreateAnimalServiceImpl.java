@@ -3,6 +3,7 @@ package ru.mts.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import ru.mts.annotation.Logging;
 import ru.mts.entity.Animal;
 import ru.mts.entity.Habitat;
 import ru.mts.entity.Provider;
@@ -60,6 +61,7 @@ public class CreateAnimalServiceImpl implements CreateAnimalService {
     }
 
     @Override
+    @Logging(entering = true)
     public List<Animal> createListRandomAnimals(int n) {
         if (n < 0) throw new NegativeNumberException(n);
         List<Animal> animals = new CopyOnWriteArrayList<>();
@@ -70,6 +72,7 @@ public class CreateAnimalServiceImpl implements CreateAnimalService {
     }
 
     @Override
+    @Logging(entering = true, exiting = true, level = "WARN")
     public Animal createRandomAnimal() {
         Animal animal = new Animal();
 

@@ -24,7 +24,7 @@ spring:
 
 application:
   animal:
-    log.enabled: true
+    log.enabled: false
     log.path: 'create-animal-starter/src/main/resources/animals/logData.txt'
     secret-information.path: 'create-animal-starter/src/main/resources/secretStore/secretInformation.txt'
     directory.result: 'create-animal-starter/src/main/resources/results'
